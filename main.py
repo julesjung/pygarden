@@ -1,9 +1,7 @@
 import arcade
-from .views.game import GameView
 
-WINDOW_WIDTH = 1280
-WINDOW_HEIGHT = 720
-WINDOW_TITLE = "PyGarden"
+from game.views.game_view import GameView
+from game.constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
 
 
 def main():
@@ -11,3 +9,7 @@ def main():
     game = GameView()
     window.show_view(game)
     window.run()
+
+
+if __name__ == "__main__":
+    main()

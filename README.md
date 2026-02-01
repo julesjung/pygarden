@@ -1,6 +1,6 @@
 # PyGarden
 
-## Usage
+## Installation
 
 ### With uv
 
@@ -12,14 +12,8 @@ uv venv
 source .venv/bin/activate
 ```
 
-3. Install dependencies
+3. Launch the game
 
 ```sh
-uv pip install -e .
-```
-
-4. Launch the game
-
-```sh
-uv run game
+uv run main.py
 ```
