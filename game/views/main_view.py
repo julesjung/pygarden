@@ -18,7 +18,7 @@ class MainView(arcade.View):
         def play_button_on_click(event):
             game_view = GameView()
             self.window.show_view(game_view)
-        
+
         self.anchor.add(
             anchor_x="center_x",
             anchor_y="center_y",
@@ -28,7 +28,7 @@ class MainView(arcade.View):
     def on_show_view(self):
         arcade.set_background_color(arcade.color.CAMEL)
         self.manager.enable()
-    
+
     def on_hide_view(self):
         self.manager.disable()
 
