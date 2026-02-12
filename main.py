@@ -1,20 +1,14 @@
-""" import arcade
+import arcade
 
-from game.views.game_view import GameView
+from game.views.main_view import MainView
 from game.constants import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
 
 
 def main():
     window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
-    game = GameView()
+    game = MainView()
     window.show_view(game)
-    window.run() """
-
-import pickle
-
-def main():
-    with open("game_data.pkl", "rb") as data:
-        print(pickle.load(data))
+    window.run()
 
 if __name__ == "__main__":
     main()
