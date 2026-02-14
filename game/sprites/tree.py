@@ -3,8 +3,12 @@ from random import random
 
 
 TEXTURES = {
-    "tree": load_spritesheet("game/assets/plants/tree.png"),
-    "pine_tree": load_spritesheet("game/assets/plants/pine_tree.png"),
+    "tree": load_spritesheet("game/assets/plants/tree.png").get_texture_grid(
+        (256, 384), 2, 2
+    ),
+    "pine_tree": load_spritesheet("game/assets/plants/pine_tree.png").get_texture_grid(
+        (256, 384), 2, 2
+    ),
 }
 
 
