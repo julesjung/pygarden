@@ -45,7 +45,9 @@ class GameView(arcade.View):
         world_x, world_y = world_coordinate[0], world_coordinate[1]
         hits = arcade.get_sprites_at_point((world_x, world_y), self.tree_list)
         self.hovered_tree = (
-            sorted(hits, key=lambda hit: hit.position[1])[0] if hits else None
+            sorted(hits, key=lambda hit: hit.position[1] - hit.position[0] * 0.5)[0]
+            if hits
+            else None
         )
 
     def on_mouse_drag(self, x, y, dx, dy, _buttons, _modifiers):

@@ -1,18 +1,34 @@
-from arcade import Sprite, load_spritesheet
+import arcade
 from random import random
 
 
 TEXTURES = {
-    "tree": load_spritesheet("game/assets/plants/tree.png").get_texture_grid(
-        (256, 384), 2, 2
+    "tree": list(
+        reversed(
+            arcade.load_spritesheet("game/assets/plants/tree.png").get_texture_grid(
+                (256, 384),
+                2,
+                2,
+                hit_box_algorithm=arcade.hitbox.SimpleHitBoxAlgorithm(),
+            )
+        )
     ),
-    "pine_tree": load_spritesheet("game/assets/plants/pine_tree.png").get_texture_grid(
-        (256, 384), 2, 2
+    "pine_tree": list(
+        reversed(
+            arcade.load_spritesheet(
+                "game/assets/plants/pine_tree.png"
+            ).get_texture_grid(
+                (256, 384),
+                2,
+                2,
+                hit_box_algorithm=arcade.hitbox.SimpleHitBoxAlgorithm(),
+            )
+        )
     ),
 }
 
 
-class Tree(Sprite):
+class Tree(arcade.Sprite):
     def __init__(self, tree_type, scale=1, center_x=0, center_y=0, angle=0, **kwargs):
         super().__init__(None, scale, center_x, center_y, angle, **kwargs)
 
