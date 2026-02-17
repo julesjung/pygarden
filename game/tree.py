@@ -24,7 +24,7 @@ class Tree(pyglet.sprite.Sprite):
     def __init__(self, tree_type, *args, **kwargs):
         self.tree_type = tree_type
 
-        super().__init__(tree_images[self.tree_type][0], *args, **kwargs)
+        super().__init__(tree_images[self.tree_type][1], *args, **kwargs)
 
         pyglet.clock.schedule_once(self.grow, 10.0 + random.uniform(-1.0, 1.0))
 
