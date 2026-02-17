@@ -5,5 +5,5 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "arcade>=3.3.3",
+    "pyglet>=2.1.13",
 ]
