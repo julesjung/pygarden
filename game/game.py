@@ -7,7 +7,7 @@ SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 768
 
 
-class GameWindow(pyglet.window.Window):
+class Game(pyglet.window.Window):
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "PyGarden")
 
@@ -62,8 +62,3 @@ class GameWindow(pyglet.window.Window):
             if sprite.hit_test(world_x, world_y):
                 sprite.on_mouse_press(x, y, button, modifiers)
                 break
-
-
-if __name__ == "__main__":
-    window = GameWindow()
-    pyglet.app.run()
