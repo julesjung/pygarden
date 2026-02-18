@@ -6,7 +6,10 @@ def _get_image_rgba(sprite):
     if image in _image_cache:
         return _image_cache[image]
     data = image.get_image_data()
-    width, height = image.width, image.height
+    width, height = (
+        image.width,
+        image.height,
+    )
     rgba = data.get_data("RGBA", width * 4)
     _image_cache[image] = (width, height, rgba)
     return _image_cache[image]
@@ -29,7 +32,9 @@ def _world_to_sprite(sprite, world_x, world_y):
 
 def _pixel_alpha_at(sprite, sprite_x, sprite_y):
     width, height, rgba = _get_image_rgba(sprite)
-    return rgba[(sprite_y * width + sprite_x) * 4 + 3]
+    return rgba[
+        (int(sprite_y / sprite.scale * width) + int(sprite_x / sprite.scale)) * 4 + 3
+    ]
 
 
 def pick_sprite_under_point(sprites, world_x, world_y):
