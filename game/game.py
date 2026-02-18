@@ -2,6 +2,7 @@ import random
 import pyglet
 from game.tree import Tree
 from game.camera import Camera
+from game.leaf_counter import LeafCounter
 
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 768
@@ -30,12 +31,28 @@ class Game(pyglet.window.Window):
                 )
                 self.interactive_sprites.append(tree)
 
+        self.leaf_counter = LeafCounter(x=0, y=SCREEN_HEIGHT - 48)
+
+        controllers = pyglet.input.get_controllers()
+
+        self.controller = controllers[0] if controllers else None
+
+        if self.controller is not None:
+            self.controller.open()
+
+            pyglet.clock.schedule(self.update)
+
     def on_draw(self):
         self.clear()
 
-        self.camera.use()
+        with self.camera:
+            self.batch.draw()
 
-        self.batch.draw()
+        self.leaf_counter.draw()
+
+    def update(self, dt):
+        self.camera.x += self.controller.leftx * dt * 60
+        self.camera.y -= self.controller.lefty * dt * 60
 
     def on_mouse_motion(self, x, y, dx, dy):
         world_x, world_y = self.camera.screen_to_world(x, y)

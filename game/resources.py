@@ -18,4 +18,7 @@ resources = {
     "pine_tree": load_spritesheet("plants/pine_tree.png", 1, 2),
     "fruit": load_image("collectibles/fruit.png"),
     "leaf": load_image("collectibles/leaf.png"),
+    "leaf_counter": load_image("gui/count.png"),
+    "shopui": load_image("gui/count.png"),
+    "shop": load_image("shop.png"),
 }
