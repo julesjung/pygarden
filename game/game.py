@@ -14,10 +14,7 @@ SCREEN_HEIGHT = 768
 class Game(pyglet.window.Window):
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "PyGarden")
-
-        self.player = pyglet.media.Player()
-        self.player.queue(resources["soundtrack_1"])
-        self.player.play()
+        self.set_icon(resources["leaf"])
 
         self.camera = Camera(self)
 
@@ -39,6 +36,10 @@ class Game(pyglet.window.Window):
                 self.interactive_sprites.append(tree)
 
         self.leaf_counter = LeafCounter(x=0, y=SCREEN_HEIGHT - 48)
+
+        self.player = pyglet.media.Player()
+        self.player.queue(resources["soundtrack_1"])
+        self.player.play()
 
     def on_draw(self):
         self.clear()
