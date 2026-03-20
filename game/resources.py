@@ -13,6 +13,10 @@ def load_spritesheet(path: str, rows: int, columns: int) -> pyglet.image.ImageGr
     return pyglet.image.ImageGrid(image, rows, columns)
 
 
+def load_music(path: str) -> pyglet.media.Source:
+    return pyglet.media.load(path)
+
+
 resources = {
     "tree": load_spritesheet("plants/tree.png", 1, 2),
     "pine_tree": load_spritesheet("plants/pine_tree.png", 1, 2),
@@ -21,4 +25,5 @@ resources = {
     "leaf_counter": load_image("gui/count.png"),
     "shopui": load_image("gui/count.png"),
     "shop": load_image("shop.png"),
+    "SoundTrack#1": load_music("music/soundTrackForPyGarden#1.mp3"),
 }
