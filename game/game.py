@@ -1,11 +1,8 @@
-import random
-
 import pyglet
 
-from game.camera import Camera
-from game.leaf_counter import LeafCounter
 from game.resources import resources
-from game.tree import Tree
+from game.scene import SceneManager
+from game.scenes.loading import LoadingScene
 
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 768
@@ -16,26 +13,8 @@ class Game(pyglet.window.Window):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "PyGarden")
         self.set_icon(resources["leaf"])
 
-        self.camera = Camera(self)
-
-        self.batch = pyglet.graphics.Batch()
-        self.interactive_sprites = []
-
-        self.hovered = None
-
-        for x in range(8):
-            for y in range(10):
-                group = pyglet.graphics.Group(order=-y)
-                tree = Tree(
-                    tree_type=random.choice(["tree", "pine_tree"]),
-                    x=x * 128,
-                    y=y * 64,
-                    batch=self.batch,
-                    group=group,
-                )
-                self.interactive_sprites.append(tree)
-
-        self.leaf_counter = LeafCounter(x=0, y=SCREEN_HEIGHT - 48)
+        self.scene_manager = SceneManager(self)
+        self.scene_manager.load(LoadingScene())
 
         self.player = pyglet.media.Player()
         self.player.queue(resources["soundtrack_1"])
@@ -44,10 +23,10 @@ class Game(pyglet.window.Window):
     def on_draw(self):
         self.clear()
 
-        with self.camera:
-            self.batch.draw()
+        self.scene_manager.draw()
 
-        self.leaf_counter.draw()
+        """
+
 
     def on_mouse_motion(self, x, y, dx, dy):
         world_x, world_y = self.camera.screen_to_world(x, y)
@@ -64,9 +43,9 @@ class Game(pyglet.window.Window):
             self.hovered = hovered
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
-        if buttons & pyglet.window.mouse.LEFT:
-            self.camera.x -= dx
-            self.camera.y -= dy
+        if buttons & mouse.LEFT:
+            self.camera.x = max(0, min(self.camera.x - dx, 1024))
+            self.camera.y = max(0, min(self.camera.y - dy, 768))
 
     def on_mouse_press(self, x, y, button, modifiers):
         world_x, world_y = self.camera.screen_to_world(x, y)
@@ -74,3 +53,4 @@ class Game(pyglet.window.Window):
             if sprite.hit_test(world_x, world_y):
                 sprite.on_mouse_press(x, y, button, modifiers)
                 break
+                """

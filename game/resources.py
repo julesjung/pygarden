@@ -26,4 +26,8 @@ resources = {
     "leaf_counter": load_image("gui/count.png"),
     "shop": load_image("shop.png"),
     "soundtrack_1": load_music("music/soundtrack_1.mp3"),
+    "background": load_image("background.png"),
+    "soil": load_image("soil.png"),
+    "aqua_plant": load_spritesheet("plants/aqua_plant.png", 1, 3),
+    "logo": load_image("logo.png"),
 }

@@ -1,6 +1,5 @@
 import pyglet
 
-
 _image_cache = {}
 
 
