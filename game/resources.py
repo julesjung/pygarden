@@ -14,7 +14,7 @@ def load_spritesheet(path: str, rows: int, columns: int) -> pyglet.image.ImageGr
 
 
 def load_music(path: str) -> pyglet.media.Source:
-    return pyglet.media.load(path)
+    return pyglet.resource.media(path)
 
 
 resources = {
@@ -25,5 +25,5 @@ resources = {
     "leaf_counter": load_image("gui/count.png"),
     "shopui": load_image("gui/count.png"),
     "shop": load_image("shop.png"),
-    "SoundTrack#1": load_music("music/soundTrackForPyGarden#1.mp3"),
+    "soundtrack_1": load_music("music/soundtrack_1.mp3"),
 }

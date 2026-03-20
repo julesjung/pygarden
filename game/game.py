@@ -1,8 +1,11 @@
 import random
+
 import pyglet
-from game.tree import Tree
+
 from game.camera import Camera
 from game.leaf_counter import LeafCounter
+from game.resources import resources
+from game.tree import Tree
 
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 768
@@ -11,6 +14,10 @@ SCREEN_HEIGHT = 768
 class Game(pyglet.window.Window):
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "PyGarden")
+
+        self.player = pyglet.media.Player()
+        self.player.queue(resources["soundtrack_1"])
+        self.player.play()
 
         self.camera = Camera(self)
 
