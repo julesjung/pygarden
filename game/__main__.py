@@ -1,5 +1,6 @@
 import pyglet
 from .game import Game
+from game.resources import resources
 
 
 if __name__ == "__main__":
