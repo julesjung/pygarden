@@ -18,10 +18,6 @@ class Game(pyglet.window.Window):
         self.scene_manager = SceneManager(self)
         self.scene_manager.load(LoadingScene())
 
-        self.player = pyglet.media.Player()
-        self.player.queue(resources["soundtrack_1"])
-        self.player.play()
-
     def on_draw(self):
         self.clear()
 

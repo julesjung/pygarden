@@ -1,8 +1,11 @@
+import pyglet
 from pyglet.graphics import Batch, Group
+from pyglet.media import Player
 from pyglet.sprite import Sprite
 from pyglet.window import mouse
 
 from camera import Camera
+from music import MusicPlayer
 from resources import resources
 from scene import Scene
 from sprites import Shop
@@ -31,6 +34,11 @@ class GameScene(Scene):
         self.interactive_sprites.append(self.shop)
 
         self.leaf_counter = LeafCounter(x=0, y=0)
+
+        self.player = MusicPlayer()
+        self.player.play()
+
+        pyglet.clock.schedule_interval(lambda dt: self.player.next_source, 1.0)
 
     def on_enter(self):
         self.camera = Camera(self.manager.window)
