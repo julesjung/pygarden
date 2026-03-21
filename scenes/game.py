@@ -22,11 +22,9 @@ class GameScene(Scene):
         self.background = Sprite(
             img=resources["background"], batch=self.batch, group=Group(order=-127)
         )
-        self.background.scale = 0.5
         self.soil = Sprite(
             img=resources["soil"], batch=self.batch, group=Group(order=-128)
         )
-        self.soil.scale = 0.5
         self.shop = Shop(
             x=896, y=512, img=resources["shop"], batch=self.batch, group=Group(order=0)
         )

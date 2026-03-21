@@ -11,5 +11,6 @@ PyInstaller.__main__.run(
         "--windowed",
         "--add-data",
         "assets:assets",
+        "--clean",
     ]
 )
