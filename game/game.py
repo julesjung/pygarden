@@ -25,32 +25,13 @@ class Game(pyglet.window.Window):
 
         self.scene_manager.draw()
 
-        """
+    def on_mouse_motion(self, x: int, y: int, dx: int, dy: int):
+        self.scene_manager.on_mouse_motion(x, y, dx, dy)
 
+    def on_mouse_drag(
+        self, x: int, y: int, dx: int, dy: int, buttons: int, modifiers: int
+    ):
+        self.scene_manager.on_mouse_drag(x, y, dx, dy, buttons, modifiers)
 
-    def on_mouse_motion(self, x, y, dx, dy):
-        world_x, world_y = self.camera.screen_to_world(x, y)
-        hovered = None
-        for sprite in self.interactive_sprites:
-            if sprite.hit_test(world_x, world_y):
-                hovered = sprite
-                break
-        if hovered != self.hovered:
-            if self.hovered is not None:
-                self.hovered.on_hover_end()
-            if hovered is not None:
-                hovered.on_hover_start()
-            self.hovered = hovered
-
-    def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
-        if buttons & mouse.LEFT:
-            self.camera.x = max(0, min(self.camera.x - dx, 1024))
-            self.camera.y = max(0, min(self.camera.y - dy, 768))
-
-    def on_mouse_press(self, x, y, button, modifiers):
-        world_x, world_y = self.camera.screen_to_world(x, y)
-        for sprite in self.interactive_sprites:
-            if sprite.hit_test(world_x, world_y):
-                sprite.on_mouse_press(x, y, button, modifiers)
-                break
-                """
+    def on_mouse_press(self, x: int, y: int, button: int, modifiers: int):
+        self.scene_manager.on_mouse_press(x, y, button, modifiers)
