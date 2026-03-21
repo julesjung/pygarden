@@ -55,6 +55,8 @@ class GameScene(Scene):
     def on_enter(self):
         if self.manager is not None:
             self.camera = Camera(self.manager.window)
+            self.camera.x = 512
+            self.camera.y = 384
 
     def draw(self):
         with self.camera:
