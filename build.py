@@ -6,7 +6,7 @@ PyInstaller.__main__.run(
         "--name",
         "PyGarden",
         "--icon",
-        "assets/icon.ico",
+        "assets/icon.png",
         "--onefile",
         "--windowed",
         "--add-data",
