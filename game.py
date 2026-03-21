@@ -13,7 +13,7 @@ pyglet.options.dpi_scaling = "stretch"
 class Game(pyglet.window.Window):
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "PyGarden")
-        self.set_icon(resources["leaf"])
+        self.set_icon(resources["icon"])
 
         self.scene_manager = SceneManager(self)
         self.scene_manager.load(LoadingScene())

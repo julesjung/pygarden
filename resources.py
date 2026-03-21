@@ -33,4 +33,5 @@ resources = {
     "soil": load_image("soil.png"),
     "aqua_plant": load_spritesheet("plants/aqua_plant.png", 1, 3),
     "logo": load_image("logo.png"),
+    "icon": load_image("icon.png"),
 }
