@@ -29,7 +29,7 @@ class LoadingScene(Scene):
         if self.opacity == 255.0:
             pyglet.clock.unschedule(self.fade_in)
             pyglet.clock.schedule_once(
-                lambda dt: pyglet.clock.schedule_interval(self.fade_out, 1 / 60.0), 5.0
+                lambda dt: pyglet.clock.schedule_interval(self.fade_out, 1 / 60.0), 3.0
             )
 
     def fade_out(self, dt):

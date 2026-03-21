@@ -7,6 +7,8 @@ from scenes import LoadingScene
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 768
 
+pyglet.options.dpi_scaling = "stretch"
+
 
 class Game(pyglet.window.Window):
     def __init__(self):
