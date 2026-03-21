@@ -1,6 +1,6 @@
 import pyglet
 
-from game.resources import resources
+from resources import resources
 
 
 class LeafCounter(pyglet.sprite.Sprite):

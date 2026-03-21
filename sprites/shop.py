@@ -1,4 +1,4 @@
-from game.interactive_sprite import InteractiveSprite
+from interactive_sprite import InteractiveSprite
 
 
 class Shop(InteractiveSprite):

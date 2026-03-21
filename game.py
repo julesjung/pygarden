@@ -1,8 +1,8 @@
 import pyglet
 
-from game.resources import resources
-from game.scene import SceneManager
-from game.scenes.loading import LoadingScene
+from resources import resources
+from scene import SceneManager
+from scenes import LoadingScene
 
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 768

@@ -2,11 +2,11 @@ from pyglet.graphics import Batch, Group
 from pyglet.sprite import Sprite
 from pyglet.window import mouse
 
-from game.camera import Camera
-from game.resources import resources
-from game.scene import Scene
-from game.sprites import Shop
-from game.sprites.leaf_counter import LeafCounter
+from camera import Camera
+from resources import resources
+from scene import Scene
+from sprites import Shop
+from sprites.leaf_counter import LeafCounter
 
 
 class GameScene(Scene):
@@ -22,9 +22,11 @@ class GameScene(Scene):
         self.background = Sprite(
             img=resources["background"], batch=self.batch, group=Group(order=-127)
         )
+        self.background.scale = 0.5
         self.soil = Sprite(
             img=resources["soil"], batch=self.batch, group=Group(order=-128)
         )
+        self.soil.scale = 0.5
         self.shop = Shop(
             x=896, y=512, img=resources["shop"], batch=self.batch, group=Group(order=0)
         )

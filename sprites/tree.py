@@ -1,5 +1,5 @@
-from game.interactive_sprite import InteractiveSprite
-from game.resources import resources
+from interactive_sprite import InteractiveSprite
+from resources import resources
 
 TREE_WIDTH = 256
 TREE_HEIGHT = 384

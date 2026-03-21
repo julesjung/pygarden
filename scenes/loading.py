@@ -1,9 +1,9 @@
 import pyglet
 from pyglet.sprite import Sprite
 
-from game.resources import resources
-from game.scene import Scene
-from game.scenes.game import GameScene
+from resources import resources
+from scene import Scene
+from scenes.game import GameScene
 
 
 class LoadingScene(Scene):

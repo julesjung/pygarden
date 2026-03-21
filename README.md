@@ -8,5 +8,5 @@
 2. Launch the game
 
 ```sh
-uv run -m game
+uv run main.py
 ```
