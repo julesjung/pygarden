@@ -27,14 +27,22 @@ class GameScene(Scene):
         self.interactive_sprites = []
 
         self.hovered = None
-        self.shop = Shop(
-            x=896, y=512, img=resources["shop"], batch=self.batch, group=Group(order=0)
-        )
+        self.shop = Shop(x=1456, y=1040, batch=self.batch)
         self.interactive_sprites.append(self.shop)
 
         for x in range(4):
             for y in range(2):
-                sprite = Tree(x=x * 192, y=y * 256, batch=self.batch)
+                sprite = Tree(x=128 + x * 192, y=192 + y * 256, batch=self.batch)
+                self.interactive_sprites.append(sprite)
+
+        for x in range(4):
+            for y in range(2):
+                sprite = Tree(x=128 + x * 192, y=928 + y * 256, batch=self.batch)
+                self.interactive_sprites.append(sprite)
+
+        for x in range(4):
+            for y in range(2):
+                sprite = Tree(x=1184 + x * 192, y=192 + y * 256, batch=self.batch)
                 self.interactive_sprites.append(sprite)
 
         self.leaf_counter = LeafCounter(x=0, y=0)

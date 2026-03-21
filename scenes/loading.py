@@ -37,4 +37,5 @@ class LoadingScene(Scene):
         self.logo.opacity = int(self.opacity)
         if self.opacity == 0.0:
             pyglet.clock.unschedule(self.fade_out)
-            self.manager.load(GameScene())
+            if self.manager is not None:
+                self.manager.load(GameScene())

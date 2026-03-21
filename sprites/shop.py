@@ -1,9 +1,10 @@
 from interactive_sprite import InteractiveSprite
+from resources import resources
 
 
 class Shop(InteractiveSprite):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(img=resources["shop"], *args, **kwargs)
 
     def on_hover_start(self):
         self.color = (255, 200, 200)
