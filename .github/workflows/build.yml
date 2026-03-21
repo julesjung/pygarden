@@ -13,5 +13,6 @@ jobs:
       - uses: astral-sh/setup-uv@7
       - run: uv run build.py
       - uses: actions/upload-artifact@v6
-        name: ${{ matrix.os }}
-        path: dist
+        with:
+          name: ${{ matrix.os }}
+          path: dist
