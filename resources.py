@@ -20,7 +20,7 @@ def load_music(path: str) -> pyglet.media.Source:
 resources = {
     "tree": load_spritesheet("plants/tree.png", 1, 3),
     "pine_tree": load_spritesheet("plants/pine_tree.png", 1, 3),
-    "bonzai_tree": load_spritesheet("plants/bonzai_tree.png", 1, 3),
+    "bonsai": load_spritesheet("plants/bonsai.png", 1, 3),
     "fruit": load_image("collectibles/fruit.png"),
     "leaf": load_image("collectibles/leaf.png"),
     "leaf_counter": load_image("gui/count.png"),
@@ -34,4 +34,5 @@ resources = {
     "aqua_plant": load_spritesheet("plants/aqua_plant.png", 1, 3),
     "logo": load_image("logo.png"),
     "icon": load_image("icon.png"),
+    "hole": load_image("hole.png"),
 }

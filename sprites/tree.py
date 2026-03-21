@@ -1,15 +1,28 @@
+import random
+
 from interactive_sprite import InteractiveSprite
 from resources import resources
 
 
 class Tree(InteractiveSprite):
-    def __init__(self, tree_type, *args, **kwargs):
-        self.tree_type = tree_type
+    def __init__(self, *args, **kwargs):
+        super().__init__(resources["hole"], *args, **kwargs)
 
-        super().__init__(resources[self.tree_type][0], *args, **kwargs)
+        self.tree_type = None
+        self.growth_state = 0
+
+    def set_tree_type(self, tree_type):
+        self.tree_type = tree_type
+        self.growth_state = 0
+        self.image = resources[self.tree_type][self.growth_state]
 
     def grow(self):
-        self.image = resources[self.tree_type][1]
+        if (
+            self.tree_type is not None
+            and len(resources[self.tree_type]) > self.growth_state + 1
+        ):
+            self.growth_state += 1
+            self.image = resources[self.tree_type][self.growth_state]
 
     def on_hover_start(self):
         self.color = (255, 200, 200)
@@ -18,4 +31,7 @@ class Tree(InteractiveSprite):
         self.color = (255, 255, 255)
 
     def on_mouse_press(self, x, y, button, modifiers):
-        self.grow()
+        if self.tree_type is None:
+            self.set_tree_type(random.choice(["tree", "pine_tree", "bonsai"]))
+        else:
+            self.grow()
