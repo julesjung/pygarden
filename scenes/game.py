@@ -1,6 +1,5 @@
 import pyglet
 from pyglet.graphics import Batch, Group
-from pyglet.media import Player
 from pyglet.sprite import Sprite
 from pyglet.window import mouse
 
