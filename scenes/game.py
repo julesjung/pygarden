@@ -9,17 +9,13 @@ from resources import resources
 from scene import Scene
 from sprites import Shop
 from sprites.leaf_counter import LeafCounter
+from sprites.tree import Tree
 
 
 class GameScene(Scene):
     def __init__(self):
         super().__init__()
-        self.logo = Sprite(img=resources["logo"])
-
         self.batch = Batch()
-        self.interactive_sprites = []
-
-        self.hovered = None
 
         self.background = Sprite(
             img=resources["background"], batch=self.batch, group=Group(order=-127)
@@ -27,10 +23,27 @@ class GameScene(Scene):
         self.soil = Sprite(
             img=resources["soil"], batch=self.batch, group=Group(order=-128)
         )
-        self.shop = Shop(
-            x=896, y=512, img=resources["shop"], batch=self.batch, group=Group(order=0)
-        )
+
+        self.interactive_sprites = []
+
+        self.hovered = None
+        self.shop = Shop(x=1456, y=1040, batch=self.batch)
         self.interactive_sprites.append(self.shop)
+
+        for x in range(4):
+            for y in range(2):
+                sprite = Tree(x=128 + x * 192, y=192 + y * 256, batch=self.batch)
+                self.interactive_sprites.append(sprite)
+
+        for x in range(4):
+            for y in range(2):
+                sprite = Tree(x=128 + x * 192, y=928 + y * 256, batch=self.batch)
+                self.interactive_sprites.append(sprite)
+
+        for x in range(4):
+            for y in range(2):
+                sprite = Tree(x=1184 + x * 192, y=192 + y * 256, batch=self.batch)
+                self.interactive_sprites.append(sprite)
 
         self.leaf_counter = LeafCounter(x=0, y=0)
 
@@ -40,7 +53,10 @@ class GameScene(Scene):
         pyglet.clock.schedule_interval(lambda dt: self.player.next_source, 1.0)
 
     def on_enter(self):
-        self.camera = Camera(self.manager.window)
+        if self.manager is not None:
+            self.camera = Camera(self.manager.window)
+            self.camera.x = 512
+            self.camera.y = 384
 
     def draw(self):
         with self.camera:
