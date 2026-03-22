@@ -1,15 +1,43 @@
 import pyglet
 from pyglet.graphics import Batch, Group
+from pyglet.shapes import Rectangle
 from pyglet.sprite import Sprite
 from pyglet.window import mouse
 
 from camera import Camera
+from data import data
 from music import MusicPlayer
 from resources import resources
 from scene import Scene
 from sprites import Shop
 from sprites.leaf_counter import LeafCounter
 from sprites.tree import Tree
+
+
+class FadeOverlay:
+    def __init__(self, window):
+        self.rectangle = Rectangle(
+            0,
+            0,
+            width=window.width,
+            height=window.height,
+            color=(0, 0, 0),
+        )
+        self.rectangle.opacity = 255
+        self.elapsed = 0.0
+        pyglet.clock.schedule_interval(self.update, 1 / 60.0)
+
+    def update(self, dt):
+        if self.rectangle.opacity > 0:
+            self.elapsed += dt
+            self.rectangle.opacity = int(max(0, 255 - self.elapsed * 128))
+            return
+
+        if self.elapsed >= 2.0:
+            pyglet.clock.unschedule(self.update)
+
+    def draw(self):
+        self.rectangle.draw()
 
 
 class GameScene(Scene):
@@ -45,8 +73,6 @@ class GameScene(Scene):
                 sprite = Tree(x=1184 + x * 192, y=192 + y * 256, batch=self.batch)
                 self.interactive_sprites.append(sprite)
 
-        self.leaf_counter = LeafCounter(x=0, y=0)
-
         self.player = MusicPlayer()
         self.player.play()
 
@@ -58,11 +84,15 @@ class GameScene(Scene):
             self.camera.x = 512
             self.camera.y = 384
 
+            self.leaf_counter = LeafCounter(data["leaf_count"], 0, 0)
+            self.fade_overlay = FadeOverlay(self.manager.window)
+
     def draw(self):
         with self.camera:
             self.batch.draw()
 
         self.leaf_counter.draw()
+        self.fade_overlay.draw()
 
     def on_mouse_motion(self, x, y, dx, dy):
         world_x, world_y = self.camera.screen_to_world(x, y)

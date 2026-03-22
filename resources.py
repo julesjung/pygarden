@@ -35,4 +35,5 @@ resources = {
     "logo": load_image("logo.png"),
     "icon": load_image("icon.png"),
     "hole": load_image("hole.png"),
+    "buttons": load_spritesheet("gui/buttons.png", 4, 2),
 }
