@@ -65,10 +65,8 @@ class MainMenuScene(Scene):
 
     def on_enter(self):
         if self.manager is not None:
-            self.manager.window.push_handlers(self.new_game_button)
-            self.manager.window.push_handlers(self.continue_button)
-            self.manager.window.push_handlers(self.load_game_button)
-            self.manager.window.push_handlers(self.quit_button)
+            for button in self.buttons:
+                self.manager.window.push_handlers(self.quit_button)
 
         pyglet.clock.schedule_interval(self.update, 1 / 60.0)
 
