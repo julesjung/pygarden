@@ -1,6 +1,5 @@
 import json
 import os
-import time
 
 from platformdirs import user_data_dir
 
@@ -17,17 +16,5 @@ def get_save_file():
 
 
 def load_game():
-    try:
-        with open(get_save_file(), "r") as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {"leaf_count": 0, "last_played": time.time()}
-
-
-def save_game(state):
-    state["last_played"] = time.time()
-    with open(get_save_file(), "w") as f:
-        json.dump(state, f)
-
-
-data = load_game()
+    with open(get_save_file(), "r") as file:
+        return json.load(file)

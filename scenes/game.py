@@ -1,3 +1,6 @@
+import json
+import time
+
 import pyglet
 from pyglet.graphics import Batch, Group
 from pyglet.shapes import Rectangle
@@ -5,6 +8,7 @@ from pyglet.sprite import Sprite
 from pyglet.window import mouse
 
 from camera import Camera
+from data import get_save_file
 from music import MusicPlayer
 from resources import resources
 from scene import Scene
@@ -39,9 +43,12 @@ class FadeOverlay:
         self.rectangle.draw()
 
 
-class GameScene(Scene):
-    def __init__(self):
+class Game(Scene):
+    def __init__(self, data):
         super().__init__()
+
+        self.data = data
+
         self.batch = Batch()
 
         self.background = Sprite(
@@ -78,12 +85,13 @@ class GameScene(Scene):
         pyglet.clock.schedule_interval(lambda dt: self.player.next_source, 1.0)
 
     def on_enter(self):
+        self.save_game()
         if self.manager is not None:
             self.camera = Camera(self.manager.window)
             self.camera.x = 512
             self.camera.y = 384
 
-            self.leaf_counter = LeafCounter(0, 0)
+            self.leaf_counter = LeafCounter(self.data["leaf_count"], 0, 0)
             self.fade_overlay = FadeOverlay(self.manager.window)
 
     def draw(self):
@@ -118,3 +126,11 @@ class GameScene(Scene):
             if sprite.hit_test(world_x, world_y):
                 sprite.on_mouse_press(x, y, button, modifiers)
                 break
+
+    def on_exit(self):
+        self.save_game()
+
+    def save_game(self):
+        self.data["last_played"] = time.time()
+        with open(get_save_file(), "w") as f:
+            json.dump(self.data, f)

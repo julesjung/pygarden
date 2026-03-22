@@ -4,7 +4,7 @@ from pyglet.window import Window
 from data import load_game
 from resources import resources
 from scene import SceneManager
-from scenes import MainMenuScene
+from scenes import MainMenu
 
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 768
@@ -15,7 +15,7 @@ window = Window(SCREEN_WIDTH, SCREEN_HEIGHT, "PyGarden")
 window.set_icon(resources["icon"])
 
 scene_manager = SceneManager(window)
-scene_manager.set_scene(MainMenuScene())
+scene_manager.set_scene(MainMenu())
 
 data = load_game()
 

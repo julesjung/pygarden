@@ -1,14 +1,17 @@
+import time
+
 import pyglet
 from pyglet.graphics import Batch
 from pyglet.gui import PushButton
 from pyglet.sprite import Sprite
 
+from data import load_game
 from resources import resources
 from scene import Scene
-from scenes.game import GameScene
+from scenes.game import Game
 
 
-class MainMenuScene(Scene):
+class MainMenu(Scene):
     def __init__(self):
         super().__init__()
 
@@ -61,12 +64,13 @@ class MainMenuScene(Scene):
         self.phase = "logo"
 
         self.new_game_button.set_handler("on_release", self.on_new_game_button_pressed)
+        self.continue_button.set_handler("on_release", self.on_continue_button_pressed)
         self.quit_button.set_handler("on_release", self.on_quit_button_pressed)
 
     def on_enter(self):
         if self.manager is not None:
             for button in self.buttons:
-                self.manager.window.push_handlers(self.quit_button)
+                self.manager.window.push_handlers(button)
 
         pyglet.clock.schedule_interval(self.update, 1 / 60.0)
 
@@ -97,7 +101,13 @@ class MainMenuScene(Scene):
 
     def on_new_game_button_pressed(self, widget):
         if self.manager is not None:
-            self.manager.set_scene(GameScene())
+            data = {"leaf_count": 0, "last_played": time.time()}
+            self.manager.set_scene(Game(data))
+
+    def on_continue_button_pressed(self, widget):
+        if self.manager is not None:
+            data = load_game()
+            self.manager.set_scene(Game(data))
 
     def on_quit_button_pressed(self, widget):
         pyglet.app.exit()
@@ -105,8 +115,6 @@ class MainMenuScene(Scene):
     def on_exit(self):
         if self.manager is not None:
             window = self.manager.window
-
-            print(window.remove_handlers)
 
             window.remove_handlers(self.new_game_button)
             window.remove_handlers(self.continue_button)
