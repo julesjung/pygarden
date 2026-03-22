@@ -86,14 +86,13 @@ class MainMenuScene(Scene):
                 self.phase = "buttons"
 
         if self.phase == "buttons":
-            if self.elapsed >= 2.0 and self.elapsed < 4.0:
-                self.elapsed += dt
-                new_opacity = int(min(255, (self.elapsed - 2) * 128))
-                for button in self.buttons:
-                    button._sprite.opacity = new_opacity
-                if new_opacity == 255:
-                    self.phase == "done"
-                return
+            self.elapsed += dt
+            new_opacity = int(min(255, (self.elapsed - 2) * 128))
+            for button in self.buttons:
+                button._sprite.opacity = new_opacity
+            if new_opacity == 255:
+                self.phase == "done"
+            return
 
         if self.phase == "done":
             pyglet.clock.unschedule(self.update)
