@@ -5,7 +5,6 @@ from pyglet.sprite import Sprite
 from pyglet.window import mouse
 
 from camera import Camera
-from data import data
 from music import MusicPlayer
 from resources import resources
 from scene import Scene
@@ -84,7 +83,7 @@ class GameScene(Scene):
             self.camera.x = 512
             self.camera.y = 384
 
-            self.leaf_counter = LeafCounter(data["leaf_count"], 0, 0)
+            self.leaf_counter = LeafCounter(0, 0)
             self.fade_overlay = FadeOverlay(self.manager.window)
 
     def draw(self):
