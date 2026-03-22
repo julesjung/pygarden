@@ -5,6 +5,9 @@ class Scene:
     def on_enter(self):
         pass
 
+    def on_exit(self):
+        pass
+
     def draw(self):
         pass
 
@@ -23,7 +26,9 @@ class SceneManager:
         self.window = window
         self.scene = None
 
-    def load(self, scene: Scene):
+    def set_scene(self, scene: Scene):
+        if self.scene is not None:
+            self.scene.on_exit()
         self.scene = scene
         self.scene.manager = self
         self.scene.on_enter()

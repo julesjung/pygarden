@@ -1,4 +1,4 @@
-from scenes.game import GameScene
-from scenes.loading import LoadingScene
+from scenes.game import Game
+from scenes.main_menu import MainMenu
 
-__all__ = ["LoadingScene", "GameScene"]
+__all__ = ["Game", "MainMenu"]

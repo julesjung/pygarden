@@ -17,6 +17,10 @@ def load_music(path: str) -> pyglet.media.Source:
     return pyglet.resource.media(path)
 
 
+def load_font(path: str):
+    return pyglet.resource.add_font(path)
+
+
 resources = {
     "tree": load_spritesheet("plants/tree.png", 1, 3),
     "pine_tree": load_spritesheet("plants/pine_tree.png", 1, 3),
@@ -35,4 +39,7 @@ resources = {
     "logo": load_image("logo.png"),
     "icon": load_image("icon.png"),
     "hole": load_image("hole.png"),
+    "buttons": load_spritesheet("gui/buttons.png", 4, 2),
 }
+
+load_font("fonts/dohyeon-regular.ttf")
