@@ -1,7 +1,6 @@
 import pyglet
 from pyglet.window import Window
 
-from data import load_game
 from resources import resources
 from scene import SceneManager
 from scenes import MainMenu
@@ -16,8 +15,6 @@ window.set_icon(resources["icon"])
 
 scene_manager = SceneManager(window)
 scene_manager.set_scene(MainMenu())
-
-data = load_game()
 
 
 @window.event
