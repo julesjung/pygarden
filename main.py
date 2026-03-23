@@ -2,40 +2,25 @@ import pyglet
 from pyglet.window import Window
 
 from resources import resources
-from scene import SceneManager
-from scenes import MainMenu
+from scenes.game import Game
 
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 768
 
 pyglet.options.dpi_scaling = "stretch"
+pyglet.options.text_antialiasing = False
 
 window = Window(SCREEN_WIDTH, SCREEN_HEIGHT, "PyGarden")
 window.set_icon(resources["icon"])
 
-scene_manager = SceneManager(window)
-scene_manager.set_scene(MainMenu())
+game = Game(window, {"leaf_count": 0})
+game.on_enter()
 
 
 @window.event
 def on_draw():
     window.clear()
-    scene_manager.draw()
-
-
-@window.event
-def on_mouse_motion(x: int, y: int, dx: int, dy: int):
-    scene_manager.on_mouse_motion(x, y, dx, dy)
-
-
-@window.event
-def on_mouse_drag(x: int, y: int, dx: int, dy: int, buttons: int, modifiers: int):
-    scene_manager.on_mouse_drag(x, y, dx, dy, buttons, modifiers)
-
-
-@window.event
-def on_mouse_press(x: int, y: int, button: int, modifiers: int):
-    scene_manager.on_mouse_press(x, y, button, modifiers)
+    game.draw()
 
 
 pyglet.app.run()

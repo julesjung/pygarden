@@ -52,10 +52,15 @@ class InteractiveSprite(pyglet.sprite.Sprite):
         return False
 
     def on_hover_start(self):
-        pass
+        self.dispatch_event("on_hover_start")
 
     def on_hover_end(self):
-        pass
+        self.dispatch_event("on_hover_end")
 
     def on_mouse_press(self, x, y, button, modifiers):
-        pass
+        self.dispatch_event("on_mouse_press", x, y, button, modifiers)
+
+
+InteractiveSprite.register_event_type("on_hover_start")
+InteractiveSprite.register_event_type("on_hover_end")
+InteractiveSprite.register_event_type("on_mouse_press")

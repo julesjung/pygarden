@@ -8,12 +8,12 @@ from pyglet.sprite import Sprite
 from data import load_game
 from resources import resources
 from scene import Scene
-from scenes.game import Game
+from scenes.game import FadeOverlay, Game
 
 
 class MainMenu(Scene):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, window):
+        super().__init__(window)
 
         self.logo = Sprite(
             x=256,
@@ -68,9 +68,7 @@ class MainMenu(Scene):
         self.quit_button.set_handler("on_release", self.on_quit_button_pressed)
 
     def on_enter(self):
-        if self.manager is not None:
-            for button in self.buttons:
-                self.manager.window.push_handlers(button)
+        super().on_enter()
 
         pyglet.clock.schedule_interval(self.update, 1 / 60.0)
 
@@ -100,23 +98,13 @@ class MainMenu(Scene):
             pyglet.clock.unschedule(self.update)
 
     def on_new_game_button_pressed(self, widget):
-        if self.manager is not None:
-            data = {"leaf_count": 0, "last_played": time.time()}
-            self.manager.set_scene(Game(data))
+        pass
 
     def on_continue_button_pressed(self, widget):
-        if self.manager is not None:
-            data = load_game()
-            self.manager.set_scene(Game(data))
+        pass
 
     def on_quit_button_pressed(self, widget):
         pyglet.app.exit()
 
     def on_exit(self):
-        if self.manager is not None:
-            window = self.manager.window
-
-            window.remove_handlers(self.new_game_button)
-            window.remove_handlers(self.continue_button)
-            window.remove_handlers(self.load_game_button)
-            window.remove_handlers(self.quit_button)
+        super().on_exit()
