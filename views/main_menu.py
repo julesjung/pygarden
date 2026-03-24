@@ -1,6 +1,9 @@
 import arcade
 import arcade.gui
 
+from data import load_game
+from views.game import GameView
+
 
 class MainMenuView(arcade.View):
     def __init__(self):
@@ -55,18 +58,19 @@ class MainMenuView(arcade.View):
             texture_pressed=buttons[7],
         )
 
+        new_game_button.on_click = self.on_new_game_button_click
+        quit_button.on_click = self.on_quit_button_click
+
         self.manager.add(new_game_button)
         self.manager.add(continue_button)
         self.manager.add(load_game_button)
         self.manager.add(quit_button)
 
-        @new_game_button.event("on_click")
-        def on_new_game_button_pressed(self):
-            pass
+    def on_new_game_button_click(self, event):
+        self.window.show_view(GameView(load_game()))
 
-        @quit_button.event("on_click")
-        def on_quit_button_pressed(self):
-            arcade.exit()
+    def on_quit_button_click(self, event):
+        arcade.exit()
 
     def on_draw(self):
         self.clear()
