@@ -5,11 +5,8 @@ class Scene:
     def __init__(self, window: Window):
         self.window = window
 
-    def on_enter(self):
-        self.window.push_handlers(self)
-
-    def on_exit(self):
-        self.window.push_handlers(self)
+    def update(self, dt):
+        pass
 
     def draw(self):
         pass
@@ -21,4 +18,7 @@ class Scene:
         pass
 
     def on_mouse_press(self, x, y, button, modifiers):
+        pass
+
+    def on_mouse_scroll(self, x, y, scroll_x, scroll_y):
         pass

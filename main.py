@@ -1,26 +1,22 @@
+import arcade
 import pyglet
-from pyglet.window import Window
 
-from resources import resources
-from scenes.game import Game
-
-SCREEN_WIDTH = 1024
-SCREEN_HEIGHT = 768
+from views.main_menu import MainMenuView
 
 pyglet.options.dpi_scaling = "stretch"
-pyglet.options.text_antialiasing = False
 
-window = Window(SCREEN_WIDTH, SCREEN_HEIGHT, "PyGarden")
-window.set_icon(resources["icon"])
-
-game = Game(window, {"leaf_count": 0})
-game.on_enter()
+pyglet.resource.path = ["assets"]
+pyglet.resource.reindex()
 
 
-@window.event
-def on_draw():
-    window.clear()
-    game.draw()
+def main():
+    window = arcade.Window(1024, 768, "PyGarden")
+    window.set_icon(pyglet.resource.image("icon.png").get_image_data())
+
+    window.show_view(MainMenuView())
+
+    arcade.run()
 
 
-pyglet.app.run()
+if __name__ == "__main__":
+    main()

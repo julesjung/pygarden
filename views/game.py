@@ -3,7 +3,6 @@ import time
 
 import pyglet
 from pyglet.graphics import Batch, Group
-from pyglet.shapes import Rectangle
 from pyglet.sprite import Sprite
 from pyglet.window import Window, mouse
 
@@ -11,37 +10,11 @@ from camera import Camera
 from data import get_save_file
 from music import MusicPlayer
 from resources import resources
-from scene import Scene
-from scenes.shop import ShopView
 from sprites import Shop
 from sprites.leaf_counter import LeafCounter
 from sprites.tree import Tree
-
-
-class FadeOverlay:
-    def __init__(self, window):
-        self.rectangle = Rectangle(
-            0,
-            0,
-            width=window.width,
-            height=window.height,
-            color=(0, 0, 0),
-        )
-        self.rectangle.opacity = 255
-        self.elapsed = 0.0
-        pyglet.clock.schedule_interval(self.update, 1 / 60.0)
-
-    def update(self, dt):
-        if self.rectangle.opacity > 0:
-            self.elapsed += dt
-            self.rectangle.opacity = int(max(0, 255 - self.elapsed * 128))
-            return
-
-        if self.elapsed >= 2.0:
-            pyglet.clock.unschedule(self.update)
-
-    def draw(self):
-        self.rectangle.draw()
+from utils import Scene
+from views.shop import ShopView
 
 
 class Game(Scene):
@@ -91,26 +64,20 @@ class Game(Scene):
         self.shop_view = ShopView(self.window)
         self.in_shop = False
 
-        self.shop.set_handler("on_mouse_press", self.on_shop_press)
+        @self.shop.event
+        def on_mouse_press(x, y, buttons, modifiers):
+            self.on_shop_press(x, y, buttons, modifiers)
 
         self.save_game()
         self.leaf_counter = LeafCounter(self.data["leaf_count"], 0, 0)
 
         pyglet.clock.schedule_interval(lambda dt: self.player.next_source, 1.0)
 
-    def on_enter(self):
-        super().on_enter()
-        self.fade_overlay = FadeOverlay(self.window)
-
-    def on_exit(self):
-        super().on_exit()
-
     def draw(self):
         with self.camera:
             self.batch.draw()
 
         self.leaf_counter.draw()
-        self.fade_overlay.draw()
 
         if self.in_shop:
             self.shop_view.draw()
@@ -148,5 +115,7 @@ class Game(Scene):
 
     def on_shop_press(self, x, y, buttons, modifiers):
         if buttons & mouse.LEFT:
-            self.in_shop = True
-            self.shop_view.on_enter()
+            self.dispatch_event("open_shop")
+
+
+Game.register_event_type("open_shop")

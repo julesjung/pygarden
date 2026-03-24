@@ -93,9 +93,6 @@ class ShopView:
             self.list_items.append(frame)
             self.list_items.append(label)
 
-    def on_enter(self):
-        self.window.set_handler("on_mouse_scroll", self.on_mouse_scroll)
-
     def draw(self):
         self.background_batch.draw()
         self.batch.draw()
@@ -103,6 +100,3 @@ class ShopView:
     def on_mouse_scroll(self, x, y, scroll_x, scroll_y):
         for list_item in self.list_items:
             list_item.y -= scroll_y * 16
-
-    def on_exit(self):
-        self.window.remove_handler("on_mouse_scroll", self.on_mouse_scroll)
