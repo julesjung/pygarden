@@ -11,7 +11,7 @@ times in seconds
 
 oak = {
     "name": "Chêne",
-    "spritesheet": "assets/plants/oak_tree.png",
+    "spritesheet": ":assets:plants/oak_tree.png",
     "price": 100,
     "yield": 100,
     "time_to_grow_adult": 5,
@@ -21,7 +21,7 @@ oak = {
 
 sakura = {
     "name": "Cerisier du Japon",
-    "spritesheet": "assets/plants/sakura.png",
+    "spritesheet": ":assets:plants/sakura.png",
     "price": 300,
     "yield": 500,
     "time_to_grow_adult": 60,
@@ -31,7 +31,7 @@ sakura = {
 
 birch = {
     "name": "Bouleau",
-    "spritesheet": "assets/plants/birch_tree.png",
+    "spritesheet": ":assets:plants/birch_tree.png",
     "price": 3000,
     "yield": 4500,
     "time_to_grow_adult": 900,
@@ -41,7 +41,7 @@ birch = {
 
 pine = {
     "name": "Sapin",
-    "spritesheet": "assets/plants/pine_tree.png",
+    "spritesheet": ":assets:plants/pine_tree.png",
     "price": 10000,
     "yield": 10000,
     "time_to_grow_adult": 3600,
@@ -51,7 +51,7 @@ pine = {
 
 clovers = {
     "name": "Trèfles",
-    "spritesheet": "assets/plants/clovers.png",
+    "spritesheet": ":assets:plants/clovers.png",
     "price": 50000,
     "yield": 35000,
     "time_to_grow_adult": 7200,
@@ -61,7 +61,7 @@ clovers = {
 
 kelp = {
     "name": "Algues",
-    "spritesheet": "assets/plants/kelp.png",
+    "spritesheet": ":assets:plants/kelp.png",
     "price": 200000,
     "yield": 150000,
     "time_to_grow_adult": 21600,
@@ -71,7 +71,7 @@ kelp = {
 
 nenuphar = {
     "name": "Nénuphar",
-    "spritesheet": "assets/plants/nenuphar.png",
+    "spritesheet": ":assets:plants/nenuphar.png",
     "price": 500000,
     "yield": 300000,
     "time_to_grow_adult": 43200,
@@ -81,7 +81,7 @@ nenuphar = {
 
 corals = {
     "name": "Coraux",
-    "spritesheet": "assets/plants/corals.png",
+    "spritesheet": ":assets:plants/corals.png",
     "price": 1250000,
     "yield": 1000000,
     "time_to_grow_adult": 86400,
@@ -91,7 +91,7 @@ corals = {
 
 acacia = {
     "name": "Acacia",
-    "spritesheet": "assets/plants/acacia.png",
+    "spritesheet": ":assets:plants/acacia.png",
     "price": 5000000,
     "yield": 3000000,
     "time_to_grow_adult": 172800,
@@ -101,7 +101,7 @@ acacia = {
 
 cactus = {
     "name": "Cactus",
-    "spritesheet": "assets/plants/cactus.png",
+    "spritesheet": ":assets:plants/cactus.png",
     "price": 20000000,
     "yield": 15000000,
     "time_to_grow_adult": 259200,
@@ -111,7 +111,7 @@ cactus = {
 
 palm = {
     "name": "Palmier",
-    "spritesheet": "assets/plants/palm.png",
+    "spritesheet": ":assets:plants/palm.png",
     "price": 100000000,
     "yield": 60000000,
     "time_to_grow_adult": 432000,
@@ -121,7 +121,7 @@ palm = {
 
 baobab = {
     "name": "Baobab",
-    "spritesheet": "assets/plants/baobab.png",
+    "spritesheet": ":assets:plants/baobab.png",
     "price": 1000000000,
     "yield": 100000000,
     "time_to_grow_adult": 604800,

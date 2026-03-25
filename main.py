@@ -1,16 +1,20 @@
 import arcade
 import pyglet
 
+from utils import BASE_DIR
 from views.main_menu import MainMenuView
 
 pyglet.options.dpi_scaling = "stretch"
+pyglet.resource.path = ["assets"]
+pyglet.resource.reindex()
 
-arcade.load_font("assets/fonts/dohyeon-regular.ttf")
+arcade.resources.add_resource_handle("assets", BASE_DIR / "assets")
+arcade.load_font(":assets:fonts/dohyeon-regular.ttf")
 
 
 def main():
     window = arcade.Window(1024, 768, "PyGarden")
-    window.set_icon(pyglet.image.load("assets/icon.png").get_image_data())
+    window.set_icon(pyglet.resource.image("icon.png").get_image_data())
 
     window.show_view(MainMenuView())
 

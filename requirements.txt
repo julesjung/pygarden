@@ -16,8 +16,6 @@ pefile==2024.8.26
     # via pyinstaller
 pillow==11.3.0
     # via arcade
-platformdirs==4.9.4
-    # via pygarden (pyproject.toml)
 pycparser==3.0
     # via cffi
 pyglet==2.1.13

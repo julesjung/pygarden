@@ -8,10 +8,10 @@ class MusicPlayer(pyglet.media.Player):
         super().__init__()
 
         tracks = [
-            pyglet.media.load("assets/music/soundtrack_1.mp3"),
-            pyglet.media.load("assets/music/soundtrack_2.mp3"),
-            pyglet.media.load("assets/music/soundtrack_3.mp3"),
-            pyglet.media.load("assets/music/soundtrack_4.mp3"),
+            pyglet.resource.media("music/soundtrack_1.mp3"),
+            pyglet.resource.media("music/soundtrack_2.mp3"),
+            pyglet.resource.media("music/soundtrack_3.mp3"),
+            pyglet.resource.media("music/soundtrack_4.mp3"),
         ]
 
         random.shuffle(tracks)
