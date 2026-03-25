@@ -5,6 +5,7 @@ import arcade.gui.experimental
 from music import MusicPlayer
 from placements import plains_placements, savannah_placements, water_placements
 from plants_properties import plants
+from utils import save_game_data
 from utils.format import format_number
 
 BUTTON_STYLE = {
@@ -87,6 +88,9 @@ class GameView(arcade.View):
         self.current_plant_index = 0
         self.shop_manager = arcade.gui.UIManager()
 
+        self.planting: tuple[int, int] | None = None
+        self.planting_sprite = arcade.Sprite()
+
     def on_show_view(self) -> None:
         layout = arcade.gui.UILayout()
 
@@ -105,6 +109,21 @@ class GameView(arcade.View):
             texture_disabled=buy_button_textures[0],
             style=BUTTON_STYLE,
         )
+
+        @self.shop_buy_button.event("on_click")
+        def on_shop_button_click(event: arcade.gui.UIOnClickEvent):
+            self.in_shop = False
+            self.shop_manager.disable()
+            self.planting = (
+                self.current_plant_index,
+                plants[self.current_plant_index]["ground_type"],
+            )
+            if self.planting is not None:
+                self.camera.position = [(512, 1152), (512, 384), (1536, 384)][
+                    self.planting[1]
+                ]
+                self.planting_sprite.texture = self.plant_textures[self.planting[0]][0]
+                self.planting_sprite.position = (event.x, event.y)
 
         layout.add(self.shop_buy_button)
 
@@ -190,6 +209,8 @@ class GameView(arcade.View):
             self.shop_background_sprites.draw()
             self.shop_sprites.draw()
             self.shop_manager.draw()
+        elif self.planting is not None:
+            arcade.draw_sprite(self.planting_sprite, alpha=128)
 
     def on_update(self, delta_time: float):
         if self.needs_render:
@@ -199,14 +220,16 @@ class GameView(arcade.View):
     def on_mouse_drag(
         self, x: int, y: int, dx: int, dy: int, _buttons: int, _modifiers: int
     ):
-        if not self.in_shop:
+        if not self.in_shop and self.planting is None:
             self.camera.position = (
                 max(512, min(self.camera.position.x - dx, 1536)),
                 max(384, min(self.camera.position.y - dy, 1152)),
             )
 
     def on_mouse_motion(self, x, y, dx, dy):
-        if not self.in_shop:
+        if self.planting is not None:
+            self.planting_sprite.position = (x, y)
+        elif not self.in_shop:
             (world_x, world_y, _) = self.camera.unproject((x, y))
             hovered = None
             for sprite in self.foregroud_sprites:
@@ -221,12 +244,27 @@ class GameView(arcade.View):
                 self.hovered = hovered
 
     def on_mouse_press(self, x, y, button, modifiers):
-        if not self.in_shop:
+        if self.in_shop:
+            if not self.shop_background.collides_with_point((x, y)):
+                self.in_shop = False
+                self.shop_manager.disable()
+        elif self.planting is not None:
+            (world_x, world_y, _) = self.camera.unproject((x, y))
+            for index, plant in enumerate(
+                [self.plain_plants, self.water_plants, self.savannah_plants][
+                    self.planting[1]
+                ]
+            ):
+                if plant.collides_with_point((world_x, world_y)):
+                    self.data[["plains", "water", "savannah"][self.planting[1]]][
+                        index
+                    ] = {"type": self.planting[0], "growth_stage": 0}
+                    self.needs_render = True
+                    save_game_data(self.data)
+                    self.planting = None
+                    return
+        else:
             (world_x, world_y, _) = self.camera.unproject((x, y))
             if self.shop.collides_with_point((world_x, world_y)):
                 self.in_shop = True
                 self.shop_manager.enable()
-        else:
-            if not self.shop_background.collides_with_point((x, y)):
-                self.in_shop = False
-                self.shop_manager.disable()
