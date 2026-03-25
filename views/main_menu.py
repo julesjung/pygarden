@@ -10,6 +10,8 @@ class MainMenuView(arcade.View):
         super().__init__()
         self.manager = arcade.gui.UIManager()
 
+        self.background_color = arcade.uicolor.DARK_BLUE_MIDNIGHT_BLUE
+
         self.sprites = arcade.SpriteList()
         self.logo = arcade.Sprite(
             "assets/logo.png",

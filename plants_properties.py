@@ -119,9 +119,9 @@ palm = {
     "ground_type": 2,
 }
 
-jungle = {
-    "name": "Jungle Tree",
-    "spritesheet": "assets/plants/jungle.png",
+baobab = {
+    "name": "Baobab",
+    "spritesheet": "assets/plants/baobab.png",
     "price": 1000000000,
     "yield": 100000000,
     "time_to_grow_adult": 604800,
@@ -129,7 +129,6 @@ jungle = {
     "ground_type": 2,
 }
 
-"""
 plants = [
     oak,
     sakura,
@@ -142,8 +141,5 @@ plants = [
     acacia,
     cactus,
     palm,
-    jungle,
+    baobab,
 ]
-"""
-
-plants = [oak, sakura, birch, pine, clovers, kelp, nenuphar, corals, acacia, cactus]
