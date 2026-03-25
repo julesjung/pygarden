@@ -1,19 +1,17 @@
 import random
 
-from pyglet.media import Player
-
-from resources import resources
+import pyglet
 
 
-class MusicPlayer(Player):
+class MusicPlayer(pyglet.media.Player):
     def __init__(self) -> None:
         super().__init__()
 
         tracks = [
-            resources["soundtrack_1"],
-            resources["soundtrack_2"],
-            resources["soundtrack_3"],
-            resources["soundtrack_4"],
+            pyglet.media.load("assets/music/soundtrack_1.mp3"),
+            pyglet.media.load("assets/music/soundtrack_2.mp3"),
+            pyglet.media.load("assets/music/soundtrack_3.mp3"),
+            pyglet.media.load("assets/music/soundtrack_4.mp3"),
         ]
 
         random.shuffle(tracks)

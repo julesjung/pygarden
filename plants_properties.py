@@ -11,7 +11,7 @@ times in seconds
 
 oak = {
     "name": "Chêne",
-    "spritesheet": "assets/plants/tree.png",
+    "spritesheet": "assets/plants/oak_tree.png",
     "price": 100,
     "yield": 100,
     "time_to_grow_adult": 5,
@@ -51,7 +51,7 @@ pine = {
 
 clovers = {
     "name": "Trèfles",
-    "spritesheet": "assets/plants/clover.png",
+    "spritesheet": "assets/plants/clovers.png",
     "price": 50000,
     "yield": 35000,
     "time_to_grow_adult": 7200,
@@ -119,16 +119,15 @@ palm = {
     "ground_type": 2,
 }
 
-jungle = {
+baobab = {
     "name": "Baobab",
-    "spritesheet": "assets/plants/jungle.png",
+    "spritesheet": "assets/plants/baobab.png",
     "price": 1000000000,
     "yield": 100000000,
     "time_to_grow_adult": 604800,
     "time_to_grow_leaves": 25200,
     "ground_type": 2,
 }
-
 
 plants = [
     oak,
@@ -142,5 +141,5 @@ plants = [
     acacia,
     cactus,
     palm,
-    jungle,
+    baobab,
 ]

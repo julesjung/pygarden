@@ -1,5 +1,5 @@
-from interactive_sprite import InteractiveSprite
 from resources import resources
+from utils import InteractiveSprite
 
 
 class Shop(InteractiveSprite):
