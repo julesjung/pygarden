@@ -10,10 +10,10 @@ from music import MusicPlayer
 from plants_properties import plants
 
 BUTTON_STYLE = {
-    "normal": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon"),
-    "hover": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon"),
-    "press": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon"),
-    "disabled": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon"),
+    "normal": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon", font_size=16),
+    "hover": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon", font_size=16),
+    "press": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon", font_size=16),
+    "disabled": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon", font_size=16),
 }
 
 
@@ -33,6 +33,12 @@ class GameView(arcade.View):
 
         self.shop = arcade.Sprite("assets/shop.png", center_x=1360, center_y=912)
         self.foregroud_sprites.append(self.shop)
+
+        self.plant_textures: list[list[arcade.Texture]] = []
+
+        for plant in plants:
+            sheet = arcade.load_spritesheet(plant["spritesheet"])
+            self.plant_textures.append(sheet.get_texture_grid((192, 256), 3, 3))
 
         self.camera = arcade.Camera2D(position=(512, 384))
 
@@ -79,6 +85,12 @@ class GameView(arcade.View):
         )
         self.shop_background_sprites.append(self.shop_background)
 
+        self.shop_sprites = arcade.SpriteList()
+        self.shop_plant_preview = arcade.BasicSprite(
+            self.plant_textures[0][2], center_x=744, center_y=228
+        )
+        self.shop_sprites.append(self.shop_plant_preview)
+
         self.shop_manager = arcade.gui.UIManager()
 
     def on_show_view(self) -> None:
@@ -88,9 +100,9 @@ class GameView(arcade.View):
             width=350,
             height=371,
         )
-        shop_tree_list = arcade.gui.UIBoxLayout(space_between=16)
+        shop_plant_list = arcade.gui.UIBoxLayout(space_between=16)
 
-        for plant in plants:
+        for index, plant in enumerate(plants):
             plant_widget = arcade.gui.UITextureButton(
                 width=350,
                 height=48,
@@ -98,9 +110,14 @@ class GameView(arcade.View):
                 text=plant["name"],
                 style=BUTTON_STYLE,
             )
-            shop_tree_list.add(plant_widget)
 
-        shop_scroll_area.add(shop_tree_list)
+            @plant_widget.event
+            def on_click(event, index=index):
+                self.shop_plant_preview.texture = self.plant_textures[index][2]
+
+            shop_plant_list.add(plant_widget)
+
+        shop_scroll_area.add(shop_plant_list)
         shop_scroll_area.scroll_speed = 16
         shop_scroll_area.invert_scroll = True
 
@@ -118,6 +135,7 @@ class GameView(arcade.View):
         if self.in_shop:
             arcade.draw_lbwh_rectangle_filled(0, 0, 1024, 768, (0, 0, 0, 192))
             self.shop_background_sprites.draw()
+            self.shop_sprites.draw()
             self.shop_manager.draw()
 
     def on_mouse_drag(
