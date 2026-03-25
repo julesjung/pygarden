@@ -2,18 +2,14 @@ import json
 import os
 import time
 
-from platformdirs import user_data_dir
+from utils.path import BASE_DIR
 
 
 def game_data_file():
-    local_data_path = os.path.join(os.getcwd(), "data")
+    local_data_path = BASE_DIR / "data"
 
-    if os.path.isdir(local_data_path):
-        return os.path.join(local_data_path, "game.json")
-    else:
-        save_dir = user_data_dir("PyGarden", appauthor=False)
-        os.makedirs(save_dir, exist_ok=True)
-        return os.path.join(save_dir, "game.json")
+    os.makedirs(local_data_path, exist_ok=True)
+    return local_data_path / "game.json"
 
 
 def game_exists():

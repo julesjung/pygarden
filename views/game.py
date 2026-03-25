@@ -5,14 +5,14 @@ import arcade.gui.experimental
 from music import MusicPlayer
 from placements import plains_placements, savannah_placements, water_placements
 from plants_properties import plants
-from utils import save_game_data
+from utils import format_time, save_game_data
 from utils.format import format_number
 
 BUTTON_STYLE = {
-    "normal": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon", font_size=16),
-    "hover": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon", font_size=16),
-    "press": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon", font_size=16),
-    "disabled": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon", font_size=16),
+    "normal": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon", font_size=20),
+    "hover": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon", font_size=20),
+    "press": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon", font_size=20),
+    "disabled": arcade.gui.UITextureButton.UIStyle(font_name="Do Hyeon", font_size=20),
 }
 
 
@@ -27,12 +27,12 @@ class GameView(arcade.View):
 
         self.background_sprites = arcade.SpriteList()
         self.background = arcade.Sprite(
-            "assets/background.png", center_x=1024, center_y=768
+            ":assets:background.png", center_x=1024, center_y=768
         )
         self.background_sprites.append(self.background)
 
         self.foregroud_sprites: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
-        self.shop = arcade.Sprite("assets/shop.png", center_x=1552, center_y=1216)
+        self.shop = arcade.Sprite(":assets:shop.png", center_x=1552, center_y=1216)
         self.foregroud_sprites.append(self.shop)
 
         self.plant_textures: list[list[arcade.Texture]] = []
@@ -66,12 +66,14 @@ class GameView(arcade.View):
 
         self.hovered = None
 
-        self.overlay_sprites = arcade.SpriteList()
+        self.leaf_counter = arcade.Sprite(
+            ":assets:leaf_counter.png", center_x=928, center_y=744
+        )
 
         self.in_shop = False
         self.shop_background_sprites = arcade.SpriteList()
         self.shop_background = arcade.BasicSprite(
-            arcade.load_texture("assets/shop/background.png"),
+            arcade.load_texture(":assets:shop/background.png"),
             center_x=512,
             center_y=384,
         )
@@ -95,7 +97,7 @@ class GameView(arcade.View):
         layout = arcade.gui.UILayout()
 
         buy_button_textures = arcade.load_spritesheet(
-            "assets/shop/buy_button.png"
+            ":assets:shop/buy_button.png"
         ).get_texture_grid((222, 48), 3, 3)
 
         self.shop_buy_button = arcade.gui.UITextureButton(
@@ -109,9 +111,52 @@ class GameView(arcade.View):
             texture_disabled=buy_button_textures[0],
             style=BUTTON_STYLE,
         )
+        self.shop_buy_button.disabled = self.data["leaf_count"] < plants[0]["price"]
+
+        properties = arcade.gui.UIBoxLayout(
+            x=608,
+            width=256,
+            y=108,
+            height=207,
+            space_between=10,
+            align="left",
+        )
+        self.shop_properties_name = arcade.gui.UILabel(
+            text=f"- Nom : {plants[0]['name']}",
+            font_name="Do Hyeon",
+            align="left",
+        )
+        properties.add(self.shop_properties_name)
+        self.shop_properties_price = arcade.gui.UILabel(
+            text=f"- Prix : {format_number(plants[0]['price'])}",
+            font_name="Do Hyeon",
+            align="left",
+        )
+        properties.add(self.shop_properties_price)
+        self.shop_properties_yield = arcade.gui.UILabel(
+            text=f"- Production : {format_number(plants[0]['yield'])}",
+            font_name="Do Hyeon",
+            align="left",
+        )
+        properties.add(self.shop_properties_yield)
+        growth_time = format_time(plants[0]["time_to_grow_adult"])
+        self.shop_properties_growth = arcade.gui.UILabel(
+            text=f"- Temps de croissance : {growth_time}",
+            font_name="Do Hyeon",
+            align="left",
+        )
+        properties.add(self.shop_properties_growth)
+        production_time = format_time(plants[0]["time_to_grow_leaves"])
+        self.shop_properties_production = arcade.gui.UILabel(
+            text=f"- Temps de production : {production_time}",
+            font_name="Do Hyeon",
+            align="left",
+        )
+        properties.add(self.shop_properties_production)
+        layout.add(properties)
 
         @self.shop_buy_button.event("on_click")
-        def on_shop_button_click(event: arcade.gui.UIOnClickEvent):
+        def on_shop_buy_button_click(event: arcade.gui.UIOnClickEvent):
             self.in_shop = False
             self.shop_manager.disable()
             self.planting = (
@@ -139,8 +184,8 @@ class GameView(arcade.View):
             plant_widget = arcade.gui.UITextureButton(
                 width=350,
                 height=48,
-                texture=arcade.load_texture("assets/shop/frame.png"),
-                texture_disabled=arcade.load_texture("assets/shop/frame_clicked.png"),
+                texture=arcade.load_texture(":assets:shop/frame.png"),
+                texture_disabled=arcade.load_texture(":assets:shop/frame_clicked.png"),
                 text=plant["name"],
                 style=BUTTON_STYLE,
             )
@@ -152,7 +197,23 @@ class GameView(arcade.View):
                 self.plant_widgets[self.current_plant_index].disabled = False
                 self.plant_widgets[index].disabled = True
                 self.shop_plant_preview.texture = self.plant_textures[index][2]
+                self.shop_properties_name.text = f"- Nom : {plants[index]['name']}"
+                self.shop_properties_price.text = (
+                    f"- Prix : {format_number(plants[index]['price'])}"
+                )
+                self.shop_properties_yield.text = (
+                    f"- Production : {format_number(plants[index]['yield'])}"
+                )
+                growth_time = format_time(plants[index]["time_to_grow_adult"])
+                self.shop_properties_growth.text = (
+                    f"- Temps de croissance : {growth_time}"
+                )
+                production_time = format_time(plants[index]["time_to_grow_leaves"])
+                self.shop_properties_production.text = (
+                    f"- Temps de production : {production_time}"
+                )
                 self.shop_buy_button.text = format_number(plant["price"])
+                self.shop_buy_button.disabled = self.data["leaf_count"] < plant["price"]
                 self.current_plant_index = index
 
             shop_plant_list.add(plant_widget)
@@ -171,7 +232,7 @@ class GameView(arcade.View):
         for index, plant in enumerate(self.plain_plants):
             plant_data = self.data["plains"][index]
             if plant_data is None:
-                plant.texture = arcade.load_texture("assets/placements/plains.png")
+                plant.texture = arcade.load_texture(":assets:placements/plains.png")
             else:
                 plant.textures = self.plant_textures[plant_data["type"]]
                 plant.set_texture(plant_data["growth_stage"])
@@ -179,7 +240,7 @@ class GameView(arcade.View):
         for index, plant in enumerate(self.water_plants):
             plant_data = self.data["water"][index]
             if plant_data is None:
-                plant.texture = arcade.load_texture("assets/placements/water.png")
+                plant.texture = arcade.load_texture(":assets:placements/water.png")
             else:
                 plant.textures = self.plant_textures[plant_data["type"]]
                 plant.set_texture(plant_data["growth_stage"])
@@ -187,7 +248,7 @@ class GameView(arcade.View):
         for index, plant in enumerate(self.savannah_plants):
             plant_data = self.data["savannah"][index]
             if plant_data is None:
-                plant.texture = arcade.load_texture("assets/placements/savannah.png")
+                plant.texture = arcade.load_texture(":assets:placements/savannah.png")
             else:
                 plant.textures = self.plant_textures[plant_data["type"]]
                 plant.set_texture(plant_data["growth_stage"])
@@ -202,13 +263,31 @@ class GameView(arcade.View):
             self.savannah_plants.draw()
             self.foregroud_sprites.draw()
 
-        self.overlay_sprites.draw()
+        arcade.draw_sprite(self.leaf_counter)
+        arcade.draw_text(
+            format_number(self.data["leaf_count"]),
+            x=1000,
+            y=744,
+            font_name="Do Hyeon",
+            font_size=20,
+            anchor_x="right",
+            anchor_y="center",
+        )
 
         if self.in_shop:
             arcade.draw_lbwh_rectangle_filled(0, 0, 1024, 768, (0, 0, 0, 192))
             self.shop_background_sprites.draw()
             self.shop_sprites.draw()
             self.shop_manager.draw()
+            arcade.draw_text(
+                format_number(self.data["leaf_count"]),
+                x=464,
+                y=552,
+                font_name="Do Hyeon",
+                font_size=20,
+                anchor_x="right",
+                anchor_y="center",
+            )
         elif self.planting is not None:
             arcade.draw_sprite(self.planting_sprite, alpha=128)
 
@@ -259,6 +338,7 @@ class GameView(arcade.View):
                     self.data[["plains", "water", "savannah"][self.planting[1]]][
                         index
                     ] = {"type": self.planting[0], "growth_stage": 0}
+                    self.data["leaf_count"] -= plants[self.planting[0]]["price"]
                     self.needs_render = True
                     save_game_data(self.data)
                     self.planting = None
@@ -267,4 +347,11 @@ class GameView(arcade.View):
             (world_x, world_y, _) = self.camera.unproject((x, y))
             if self.shop.collides_with_point((world_x, world_y)):
                 self.in_shop = True
+                self.shop_buy_button.disabled = (
+                    self.data["leaf_count"] < plants[self.current_plant_index]["price"]
+                )
                 self.shop_manager.enable()
+
+    def on_key_press(self, symbol: int, modifiers: int) -> bool | None:
+        if symbol == arcade.key.ESCAPE and self.planting is not None:
+            self.planting = None

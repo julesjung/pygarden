@@ -14,7 +14,7 @@ class MainMenuView(arcade.View):
 
         self.sprites = arcade.SpriteList()
         self.logo = arcade.Sprite(
-            "assets/logo.png",
+            ":assets:logo.png",
             center_x=512,
             center_y=604,
         )
@@ -24,7 +24,7 @@ class MainMenuView(arcade.View):
         self.manager.enable()
 
         buttons = arcade.load_spritesheet(
-            "assets/main_menu/buttons.png"
+            ":assets:main_menu/buttons.png"
         ).get_texture_grid((192, 64), 2, 6)
 
         continue_button = arcade.gui.UITextureButton(

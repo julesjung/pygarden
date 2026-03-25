@@ -6,6 +6,5 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "arcade>=3.3.3",
-    "platformdirs>=4.9.2",
     "pyinstaller>=6.19.0",
 ]
