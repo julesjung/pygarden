@@ -62,6 +62,9 @@ class MainMenuView(arcade.View):
         self.manager.add(new_game_button)
         self.manager.add(quit_button)
 
+    def on_hide_view(self):
+        self.manager.disable()
+
     def on_continue_button_click(self, event):
         self.window.show_view(GameView(load_game_data()))
 
