@@ -10,7 +10,7 @@ times in seconds
 """
 
 oak = {
-    "name": "Oak",
+    "name": "Chêne",
     "spritesheet": "assets/plants/oak_tree.png",
     "price": 100,
     "yield": 100,
@@ -20,7 +20,7 @@ oak = {
 }
 
 sakura = {
-    "name": "Cherry Blossom",
+    "name": "Cerisier du Japon",
     "spritesheet": "assets/plants/sakura.png",
     "price": 300,
     "yield": 500,
@@ -30,7 +30,7 @@ sakura = {
 }
 
 birch = {
-    "name": "Birch",
+    "name": "Bouleau",
     "spritesheet": "assets/plants/birch_tree.png",
     "price": 3000,
     "yield": 4500,
@@ -40,7 +40,7 @@ birch = {
 }
 
 pine = {
-    "name": "Pine",
+    "name": "Sapin",
     "spritesheet": "assets/plants/pine_tree.png",
     "price": 10000,
     "yield": 10000,
@@ -50,7 +50,7 @@ pine = {
 }
 
 clovers = {
-    "name": "Clovers",
+    "name": "Trèfles",
     "spritesheet": "assets/plants/clovers.png",
     "price": 50000,
     "yield": 35000,
@@ -60,7 +60,7 @@ clovers = {
 }
 
 kelp = {
-    "name": "Kelp",
+    "name": "Algues",
     "spritesheet": "assets/plants/kelp.png",
     "price": 200000,
     "yield": 150000,
@@ -70,7 +70,7 @@ kelp = {
 }
 
 nenuphar = {
-    "name": "Nenuphar",
+    "name": "Nénuphar",
     "spritesheet": "assets/plants/nenuphar.png",
     "price": 500000,
     "yield": 300000,
@@ -80,7 +80,7 @@ nenuphar = {
 }
 
 corals = {
-    "name": "Corals",
+    "name": "Coraux",
     "spritesheet": "assets/plants/corals.png",
     "price": 1250000,
     "yield": 1000000,
@@ -110,7 +110,7 @@ cactus = {
 }
 
 palm = {
-    "name": "Palm Tree",
+    "name": "Palmier",
     "spritesheet": "assets/plants/palm.png",
     "price": 100000000,
     "yield": 60000000,
