@@ -1,13 +1,11 @@
-import json
-import time
-
 import arcade
 import arcade.gui
 import arcade.gui.experimental
 
-from data import get_save_file
 from music import MusicPlayer
+from placements import plains_placements, savannah_placements, water_placements
 from plants_properties import plants
+from utils import save_game_data
 from utils.format import format_number
 
 BUTTON_STYLE = {
@@ -24,14 +22,16 @@ class GameView(arcade.View):
 
         self.data = data
 
-        self.background_sprites = arcade.SpriteList()
-        self.foregroud_sprites = arcade.SpriteList()
+        self.player = MusicPlayer()
+        self.player.play()
 
+        self.background_sprites = arcade.SpriteList()
         self.background = arcade.Sprite(
             "assets/background.png", center_x=1024, center_y=768
         )
         self.background_sprites.append(self.background)
 
+        self.foregroud_sprites: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
         self.shop = arcade.Sprite("assets/shop.png", center_x=1552, center_y=1216)
         self.foregroud_sprites.append(self.shop)
 
@@ -43,35 +43,26 @@ class GameView(arcade.View):
 
         self.camera = arcade.Camera2D(position=(1024, 768))
 
-        for x in range(4):
-            for y in range(2):
-                sprite = arcade.Sprite(
-                    "assets/placement_dirt.png",
-                    center_x=224 + x * 192,
-                    center_y=1088 + y * 256,
-                )
-                self.foregroud_sprites.append(sprite)
+        self.plain_plants: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
+        self.water_plants: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
+        self.savannah_plants: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
 
-        for x in range(4):
-            for y in range(2):
-                sprite = arcade.Sprite(
-                    "assets/placement_water.png",
-                    center_x=224 + x * 192,
-                    center_y=320 + y * 256,
-                )
-                self.foregroud_sprites.append(sprite)
+        for placement in plains_placements:
+            self.plain_plants.append(
+                arcade.Sprite(center_x=placement[0], center_y=placement[1])
+            )
 
-        for x in range(4):
-            for y in range(2):
-                sprite = arcade.Sprite(
-                    "assets/placement_jungle.png",
-                    center_x=1280 + x * 192,
-                    center_y=320 + y * 256,
-                )
-                self.foregroud_sprites.append(sprite)
+        for placement in water_placements:
+            self.water_plants.append(
+                arcade.Sprite(center_x=placement[0], center_y=placement[1])
+            )
 
-        self.player = MusicPlayer()
-        self.player.play()
+        for placement in savannah_placements:
+            self.savannah_plants.append(
+                arcade.Sprite(center_x=placement[0], center_y=placement[1])
+            )
+
+        self.needs_render = True
 
         self.hovered = None
 
@@ -95,24 +86,46 @@ class GameView(arcade.View):
         self.plant_widgets = []
 
         self.current_plant_index = 0
-
         self.shop_manager = arcade.gui.UIManager()
+
+        self.planting: tuple[int, int] | None = None
+        self.planting_sprite = arcade.Sprite()
 
     def on_show_view(self) -> None:
         layout = arcade.gui.UILayout()
 
-        self.shop_price_label = arcade.gui.UILabel(
+        buy_button_textures = arcade.load_spritesheet(
+            "assets/shop/buy_button.png"
+        ).get_texture_grid((222, 48), 3, 3)
+
+        self.shop_buy_button = arcade.gui.UITextureButton(
             text=str(plants[0]["price"]),
             x=625,
-            y=327,
+            y=339,
             width=222,
             height=48,
-            font_name="Do Hyeon",
-            font_size=20,
-            align="center",
+            texture=buy_button_textures[1],
+            texture_pressed=buy_button_textures[2],
+            texture_disabled=buy_button_textures[0],
+            style=BUTTON_STYLE,
         )
 
-        layout.add(self.shop_price_label)
+        @self.shop_buy_button.event("on_click")
+        def on_shop_button_click(event: arcade.gui.UIOnClickEvent):
+            self.in_shop = False
+            self.shop_manager.disable()
+            self.planting = (
+                self.current_plant_index,
+                plants[self.current_plant_index]["ground_type"],
+            )
+            if self.planting is not None:
+                self.camera.position = [(512, 1152), (512, 384), (1536, 384)][
+                    self.planting[1]
+                ]
+                self.planting_sprite.texture = self.plant_textures[self.planting[0]][0]
+                self.planting_sprite.position = (event.x, event.y)
+
+        layout.add(self.shop_buy_button)
 
         shop_scroll_area = arcade.gui.experimental.UIScrollArea(
             x=130,
@@ -139,10 +152,12 @@ class GameView(arcade.View):
                 self.plant_widgets[self.current_plant_index].disabled = False
                 self.plant_widgets[index].disabled = True
                 self.shop_plant_preview.texture = self.plant_textures[index][2]
-                self.shop_price_label.text = format_number(plant["price"])
+                self.shop_buy_button.text = format_number(plant["price"])
                 self.current_plant_index = index
 
             shop_plant_list.add(plant_widget)
+
+        self.plant_widgets[0].disabled = True
 
         shop_scroll_area.add(shop_plant_list)
         shop_scroll_area.scroll_speed = 16
@@ -152,11 +167,39 @@ class GameView(arcade.View):
 
         self.shop_manager.add(layout)
 
+    def update_plant_sprites(self):
+        for index, plant in enumerate(self.plain_plants):
+            plant_data = self.data["plains"][index]
+            if plant_data is None:
+                plant.texture = arcade.load_texture("assets/placements/plains.png")
+            else:
+                plant.textures = self.plant_textures[plant_data["type"]]
+                plant.set_texture(plant_data["growth_stage"])
+
+        for index, plant in enumerate(self.water_plants):
+            plant_data = self.data["water"][index]
+            if plant_data is None:
+                plant.texture = arcade.load_texture("assets/placements/water.png")
+            else:
+                plant.textures = self.plant_textures[plant_data["type"]]
+                plant.set_texture(plant_data["growth_stage"])
+
+        for index, plant in enumerate(self.savannah_plants):
+            plant_data = self.data["savannah"][index]
+            if plant_data is None:
+                plant.texture = arcade.load_texture("assets/placements/savannah.png")
+            else:
+                plant.textures = self.plant_textures[plant_data["type"]]
+                plant.set_texture(plant_data["growth_stage"])
+
     def on_draw(self):
         self.clear()
 
         with self.camera.activate():
             self.background_sprites.draw()
+            self.plain_plants.draw()
+            self.water_plants.draw()
+            self.savannah_plants.draw()
             self.foregroud_sprites.draw()
 
         self.overlay_sprites.draw()
@@ -166,18 +209,27 @@ class GameView(arcade.View):
             self.shop_background_sprites.draw()
             self.shop_sprites.draw()
             self.shop_manager.draw()
+        elif self.planting is not None:
+            arcade.draw_sprite(self.planting_sprite, alpha=128)
+
+    def on_update(self, delta_time: float):
+        if self.needs_render:
+            self.update_plant_sprites()
+            self.needs_render = False
 
     def on_mouse_drag(
         self, x: int, y: int, dx: int, dy: int, _buttons: int, _modifiers: int
     ):
-        if not self.in_shop:
+        if not self.in_shop and self.planting is None:
             self.camera.position = (
                 max(512, min(self.camera.position.x - dx, 1536)),
                 max(384, min(self.camera.position.y - dy, 1152)),
             )
 
     def on_mouse_motion(self, x, y, dx, dy):
-        if not self.in_shop:
+        if self.planting is not None:
+            self.planting_sprite.position = (x, y)
+        elif not self.in_shop:
             (world_x, world_y, _) = self.camera.unproject((x, y))
             hovered = None
             for sprite in self.foregroud_sprites:
@@ -192,23 +244,27 @@ class GameView(arcade.View):
                 self.hovered = hovered
 
     def on_mouse_press(self, x, y, button, modifiers):
-        if not self.in_shop:
+        if self.in_shop:
+            if not self.shop_background.collides_with_point((x, y)):
+                self.in_shop = False
+                self.shop_manager.disable()
+        elif self.planting is not None:
+            (world_x, world_y, _) = self.camera.unproject((x, y))
+            for index, plant in enumerate(
+                [self.plain_plants, self.water_plants, self.savannah_plants][
+                    self.planting[1]
+                ]
+            ):
+                if plant.collides_with_point((world_x, world_y)):
+                    self.data[["plains", "water", "savannah"][self.planting[1]]][
+                        index
+                    ] = {"type": self.planting[0], "growth_stage": 0}
+                    self.needs_render = True
+                    save_game_data(self.data)
+                    self.planting = None
+                    return
+        else:
             (world_x, world_y, _) = self.camera.unproject((x, y))
             if self.shop.collides_with_point((world_x, world_y)):
                 self.in_shop = True
                 self.shop_manager.enable()
-        else:
-            if not self.shop_background.collides_with_point((x, y)):
-                self.in_shop = False
-                self.shop_manager.disable()
-
-    def save_game(self):
-        self.data["last_played"] = time.time()
-        with open(get_save_file(), "w") as f:
-            json.dump(self.data, f)
-
-    """
-    def on_shop_press(self, x, y, buttons, modifiers):
-        if buttons & mouse.LEFT:
-            self.dispatch_event("open_shop")
-    """
