@@ -1,11 +1,11 @@
 import json
 import os
 
-from utils.path import BASE_DIR
+from utils.path import BASE_DATA_DIR
 
 
 def game_data_file():
-    local_data_path = BASE_DIR / "data"
+    local_data_path = BASE_DATA_DIR / "data"
 
     os.makedirs(local_data_path, exist_ok=True)
     return local_data_path / "game.json"
