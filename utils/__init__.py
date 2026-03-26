@@ -10,5 +10,5 @@ __all__ = [
     "format_number",
     "format_time",
     "BASE_ASSETS_DIR",
-    "BASE_DATA_DIR"
+    "BASE_DATA_DIR",
 ]
