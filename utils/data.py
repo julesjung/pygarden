@@ -17,7 +17,7 @@ def game_exists():
 
 def default_game_data():
     return {
-        "leaf_count": 0,
+        "leaf_count": 100,
         "plants": [
             [
                 None,
