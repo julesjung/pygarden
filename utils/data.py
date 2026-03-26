@@ -1,6 +1,5 @@
 import json
 import os
-import time
 
 from utils.path import BASE_DIR
 
@@ -19,37 +18,38 @@ def game_exists():
 def default_game_data():
     return {
         "leaf_count": 0,
-        "plains": [
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
+        "plants": [
+            [
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            ],
+            [
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            ],
+            [
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+            ],
         ],
-        "water": [
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        ],
-        "savannah": [
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-        ],
-        "last_played": time.time(),
     }
 
 
@@ -59,6 +59,5 @@ def load_game_data():
 
 
 def save_game_data(data):
-    data["last_played"] = time.time()
     with open(game_data_file(), "w") as file:
         json.dump(data, file)
