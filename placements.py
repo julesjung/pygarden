@@ -30,3 +30,5 @@ savannah_placements = [
     (1664, 576),
     (1856, 576),
 ]
+
+placements = [plains_placements, water_placements, savannah_placements]

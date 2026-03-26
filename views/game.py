@@ -1,9 +1,16 @@
+import time
+
 import arcade
 import arcade.gui
 import arcade.gui.experimental
 
 from music import MusicPlayer
-from placements import plains_placements, savannah_placements, water_placements
+from placements import (
+    placements,
+    plains_placements,
+    savannah_placements,
+    water_placements,
+)
 from plants_properties import plants
 from utils import format_time, save_game_data
 from utils.format import format_number
@@ -43,23 +50,35 @@ class GameView(arcade.View):
 
         self.camera = arcade.Camera2D(position=(1024, 768))
 
-        self.plain_plants: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
+        self.plains_plants: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
         self.water_plants: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
         self.savannah_plants: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
+        self.progress_bars: arcade.SpriteList[arcade.Sprite] = arcade.SpriteList()
+
+        bar_texture = arcade.load_texture(":assets:progress_bar.png")
 
         for placement in plains_placements:
-            self.plain_plants.append(
+            self.plains_plants.append(
                 arcade.Sprite(center_x=placement[0], center_y=placement[1])
+            )
+            self.progress_bars.append(
+                arcade.Sprite(bar_texture, center_x=placement[0], center_y=placement[1])
             )
 
         for placement in water_placements:
             self.water_plants.append(
                 arcade.Sprite(center_x=placement[0], center_y=placement[1])
             )
+            self.progress_bars.append(
+                arcade.Sprite(bar_texture, center_x=placement[0], center_y=placement[1])
+            )
 
         for placement in savannah_placements:
             self.savannah_plants.append(
                 arcade.Sprite(center_x=placement[0], center_y=placement[1])
+            )
+            self.progress_bars.append(
+                arcade.Sprite(bar_texture, center_x=placement[0], center_y=placement[1])
             )
 
         self.needs_render = True
@@ -229,8 +248,8 @@ class GameView(arcade.View):
         self.shop_manager.add(layout)
 
     def update_plant_sprites(self):
-        for index, plant in enumerate(self.plain_plants):
-            plant_data = self.data["plains"][index]
+        for index, plant in enumerate(self.plains_plants):
+            plant_data = self.data["plants"][0][index]
             if plant_data is None:
                 plant.texture = arcade.load_texture(":assets:placements/plains.png")
             else:
@@ -238,7 +257,7 @@ class GameView(arcade.View):
                 plant.set_texture(plant_data["growth_stage"])
 
         for index, plant in enumerate(self.water_plants):
-            plant_data = self.data["water"][index]
+            plant_data = self.data["plants"][1][index]
             if plant_data is None:
                 plant.texture = arcade.load_texture(":assets:placements/water.png")
             else:
@@ -246,7 +265,7 @@ class GameView(arcade.View):
                 plant.set_texture(plant_data["growth_stage"])
 
         for index, plant in enumerate(self.savannah_plants):
-            plant_data = self.data["savannah"][index]
+            plant_data = self.data["plants"][2][index]
             if plant_data is None:
                 plant.texture = arcade.load_texture(":assets:placements/savannah.png")
             else:
@@ -258,10 +277,36 @@ class GameView(arcade.View):
 
         with self.camera.activate():
             self.background_sprites.draw()
-            self.plain_plants.draw()
+            self.plains_plants.draw()
             self.water_plants.draw()
             self.savannah_plants.draw()
             self.foregroud_sprites.draw()
+            current_time = time.time()
+            for list_index, plant_list in enumerate(self.data["plants"]):
+                for index, plant in enumerate(plant_list):
+                    if plant is not None and plant["growth_stage"] != 2:
+                        value = 0.0
+                        if plant["growth_stage"] == 0:
+                            value = min(
+                                1.0,
+                                (current_time - plant["last_stage_time"])
+                                / plants[plant["type"]]["time_to_grow_adult"],
+                            )
+                        elif plant["growth_stage"] == 1:
+                            value = min(
+                                1.0,
+                                (current_time - plant["last_stage_time"])
+                                / plants[plant["type"]]["time_to_grow_leaves"],
+                            )
+                        arcade.draw_sprite(self.progress_bars[list_index * 8 + index])
+                        (center_x, center_y) = placements[list_index][index]
+                        arcade.draw_lbwh_rectangle_filled(
+                            center_x - 54,
+                            center_y - 118,
+                            int(value * 91),
+                            5,
+                            (255, 255, 235),
+                        )
 
         arcade.draw_sprite(self.leaf_counter)
         arcade.draw_text(
@@ -292,9 +337,43 @@ class GameView(arcade.View):
             arcade.draw_sprite(self.planting_sprite, alpha=128)
 
     def on_update(self, delta_time: float):
+        self.grow_plants()
+
         if self.needs_render:
             self.update_plant_sprites()
+            save_game_data(self.data)
             self.needs_render = False
+
+    def grow_plants(self):
+        current_time = time.time()
+        for plant_list in self.data["plants"]:
+            for plant in plant_list:
+                if plant is not None:
+                    if plant["growth_stage"] == 0:
+                        elapsed = current_time - plant["last_stage_time"]
+                        time_to_grow_adult = plants[plant["type"]]["time_to_grow_adult"]
+                        if elapsed >= time_to_grow_adult:
+                            time_to_grow_leaves = plants[plant["type"]][
+                                "time_to_grow_leaves"
+                            ]
+                            if elapsed >= time_to_grow_adult + time_to_grow_leaves:
+                                plant["growth_stage"] = 2
+                                plant["last_stage_time"] = current_time
+                            else:
+                                plant["growth_stage"] = 1
+                                plant["last_stage_time"] = (
+                                    plant["last_stage_time"] + time_to_grow_adult
+                                )
+                            self.needs_render = True
+                    elif plant["growth_stage"] == 1:
+                        elapsed = current_time - plant["last_stage_time"]
+                        time_to_grow_leaves = plants[plant["type"]][
+                            "time_to_grow_leaves"
+                        ]
+                        if elapsed >= time_to_grow_leaves:
+                            plant["growth_stage"] = 2
+                            plant["last_stage_time"] = current_time
+                            self.needs_render = True
 
     def on_mouse_drag(
         self, x: int, y: int, dx: int, dy: int, _buttons: int, _modifiers: int
@@ -330,17 +409,18 @@ class GameView(arcade.View):
         elif self.planting is not None:
             (world_x, world_y, _) = self.camera.unproject((x, y))
             for index, plant in enumerate(
-                [self.plain_plants, self.water_plants, self.savannah_plants][
+                [self.plains_plants, self.water_plants, self.savannah_plants][
                     self.planting[1]
                 ]
             ):
                 if plant.collides_with_point((world_x, world_y)):
-                    self.data[["plains", "water", "savannah"][self.planting[1]]][
-                        index
-                    ] = {"type": self.planting[0], "growth_stage": 0}
+                    self.data["plants"][self.planting[1]][index] = {
+                        "type": self.planting[0],
+                        "growth_stage": 0,
+                        "last_stage_time": time.time(),
+                    }
                     self.data["leaf_count"] -= plants[self.planting[0]]["price"]
                     self.needs_render = True
-                    save_game_data(self.data)
                     self.planting = None
                     return
         else:
@@ -351,6 +431,20 @@ class GameView(arcade.View):
                     self.data["leaf_count"] < plants[self.current_plant_index]["price"]
                 )
                 self.shop_manager.enable()
+            for list_index, plant_list in enumerate(
+                [self.plains_plants, self.water_plants, self.savannah_plants]
+            ):
+                for index, plant in enumerate(plant_list):
+                    if plant.collides_with_point((world_x, world_y)):
+                        plant_data = self.data["plants"][list_index][index]
+                        if plant_data is not None and plant_data["growth_stage"] == 2:
+                            plant_data["growth_stage"] = 1
+                            self.data["leaf_count"] += plants[plant_data["type"]][
+                                "yield"
+                            ]
+                            plant_data["last_stage_time"] = time.time()
+                            self.needs_render = True
+                        return
 
     def on_key_press(self, symbol: int, modifiers: int) -> bool | None:
         if symbol == arcade.key.ESCAPE and self.planting is not None:
