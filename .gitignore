@@ -6,3 +6,8 @@ data/
 .ruff_cache/
 *.egg-info/
 *.spec
+
+
+# Added by cargo
+
+/target
