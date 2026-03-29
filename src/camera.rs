@@ -49,3 +49,15 @@ pub fn move_camera(
 
     *last_cursor = Some(cursor);
 }
+
+pub fn cursor_world_position(
+    window: Single<&Window>,
+    camera: Single<(&Camera, &GlobalTransform), With<MainCamera>>,
+) -> Option<Vec2> {
+    let (camera, camera_transform) = camera.into_inner();
+    let cursor_position = window.cursor_position()?;
+
+    camera
+        .viewport_to_world_2d(camera_transform, cursor_position)
+        .ok()
+}

@@ -4,7 +4,7 @@ mod loading;
 mod soundtrack;
 
 use crate::camera::{move_camera, setup_camera};
-use crate::game::setup_game;
+use crate::game::{open_shop, setup_game};
 use crate::loading::{despawn_logo, fade_in_logo, setup_loading_screen};
 use crate::soundtrack::{setup_soundtrack, update_soundtrack};
 use bevy::prelude::*;
@@ -40,7 +40,7 @@ fn main() -> AppExit {
         .add_systems(Update, fade_in_logo.run_if(in_state(GameState::Loading)))
         .add_systems(
             Update,
-            (move_camera, update_soundtrack).run_if(in_state(GameState::InGame)),
+            (move_camera, update_soundtrack, open_shop).run_if(in_state(GameState::InGame)),
         )
         .run()
 }
