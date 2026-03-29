@@ -5,15 +5,16 @@ use rand::{prelude::*, rng};
 pub struct SoundtrackPlayer {
     track_list: Vec<Handle<AudioSource>>,
     current_index: usize,
-    current_entity: Option<Entity>,
 }
+
+#[derive(Component)]
+pub struct Soundtrack;
 
 impl SoundtrackPlayer {
     fn new(track_list: Vec<Handle<AudioSource>>) -> Self {
         Self {
             track_list,
             current_index: 0,
-            current_entity: None,
         }
     }
 
@@ -34,35 +35,33 @@ pub fn setup_soundtrack(mut commands: Commands, asset_server: Res<AssetServer>) 
 
     track_list.shuffle(&mut rng());
 
-    let mut soundtrack = SoundtrackPlayer::new(track_list);
+    let soundtrack = SoundtrackPlayer::new(track_list);
 
-    let entity = commands.spawn((
+    commands.spawn((
         AudioPlayer(soundtrack.track_list[soundtrack.current_index].clone()),
         PlaybackSettings {
             mode: PlaybackMode::Despawn,
             ..Default::default()
         },
+        Soundtrack,
     ));
-    soundtrack.current_entity = Some(entity.id());
 
     commands.insert_resource(soundtrack);
 }
 
 pub fn update_soundtrack(
     mut commands: Commands,
-    query: Query<(), With<AudioPlayer>>,
+    query: Query<(), With<Soundtrack>>,
     mut soundtrack: ResMut<SoundtrackPlayer>,
 ) {
-    if let Some(current_entity) = soundtrack.current_entity
-        && query.get(current_entity).is_err()
-    {
+    if query.is_empty() {
         let entity = commands.spawn((
             AudioPlayer(soundtrack.next()),
             PlaybackSettings {
                 mode: PlaybackMode::Despawn,
                 ..Default::default()
             },
+            Soundtrack,
         ));
-        soundtrack.current_entity = Some(entity.id());
     }
 }
