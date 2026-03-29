@@ -34,3 +34,11 @@ pub fn fade_in_logo(
         commands.set_state(GameState::InGame);
     }
 }
+
+pub fn despawn_logo(mut commands: Commands, query: Query<Entity, With<Logo>>) {
+    let Ok(entity) = query.single() else {
+        return;
+    };
+
+    commands.entity(entity).despawn();
+}
