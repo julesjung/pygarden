@@ -55,7 +55,7 @@ pub fn update_soundtrack(
     mut soundtrack: ResMut<SoundtrackPlayer>,
 ) {
     if query.is_empty() {
-        let entity = commands.spawn((
+        commands.spawn((
             AudioPlayer(soundtrack.next()),
             PlaybackSettings {
                 mode: PlaybackMode::Despawn,

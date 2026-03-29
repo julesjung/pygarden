@@ -14,6 +14,6 @@ pub fn setup_game(mut commands: Commands, asset_server: Res<AssetServer>) {
             image: asset_server.load("shop.png"),
             ..Default::default()
         },
-        Transform::from_xyz(1552.0, 1216.0, 0.0),
+        Transform::from_xyz(528.0, 448.0, 0.0),
     ));
 }
