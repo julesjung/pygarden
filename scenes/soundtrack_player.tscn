@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://clikwtp53mcuy"]
+
+[ext_resource type="Script" uid="uid://b075uog53xarv" path="res://scripts/soundtrack.gd" id="1_d1k5u"]
+[ext_resource type="AudioStream" uid="uid://bcq0afcm7c7wo" path="res://assets/music/soundtrack_1.mp3" id="2_3ri4w"]
+[ext_resource type="AudioStream" uid="uid://cmtv4m0a15lyh" path="res://assets/music/soundtrack_2.mp3" id="3_wu4ap"]
+[ext_resource type="AudioStream" uid="uid://vr75yg7kh46i" path="res://assets/music/soundtrack_3.mp3" id="4_nqrio"]
+[ext_resource type="AudioStream" uid="uid://dw5eaj3g11vho" path="res://assets/music/soundtrack_4.mp3" id="5_jt3b7"]
+
+[node name="SoundtrackPlayer" type="Node" unique_id=705059109]
+script = ExtResource("1_d1k5u")
+tracks = Array[AudioStream]([ExtResource("2_3ri4w"), ExtResource("3_wu4ap"), ExtResource("4_nqrio"), ExtResource("5_jt3b7")])

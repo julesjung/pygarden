@@ -2,6 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://cdj46qof1gj56" path="res://assets/background.png" id="1_uwrxv"]
 [ext_resource type="PackedScene" uid="uid://ckbqf1vd3rob4" path="res://scenes/player.tscn" id="2_yqjtg"]
+[ext_resource type="PackedScene" uid="uid://clikwtp53mcuy" path="res://scenes/soundtrack_player.tscn" id="3_lnu2h"]
 
 [node name="Game" type="Node2D" unique_id=1294033400]
 
@@ -12,3 +13,5 @@ texture = ExtResource("1_uwrxv")
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=286987270]
 position_smoothing_enabled = true
+
+[node name="SoundtrackPlayer" parent="." unique_id=985671060 instance=ExtResource("3_lnu2h")]
