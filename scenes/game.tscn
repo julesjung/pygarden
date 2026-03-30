@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://chkxcvd0lqhga"]
+
+[ext_resource type="Texture2D" uid="uid://cdj46qof1gj56" path="res://assets/background.png" id="1_uwrxv"]
+[ext_resource type="PackedScene" uid="uid://ckbqf1vd3rob4" path="res://scenes/player.tscn" id="2_yqjtg"]
+
+[node name="Game" type="Node2D" unique_id=1294033400]
+
+[node name="Background" type="Sprite2D" parent="." unique_id=762893731]
+texture = ExtResource("1_uwrxv")
+
+[node name="Player" parent="." unique_id=1945465975 instance=ExtResource("2_yqjtg")]
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=286987270]
+position_smoothing_enabled = true

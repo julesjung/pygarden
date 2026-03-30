@@ -1,8 +1,6 @@
-__pycache__/
-dist/
-build/
-data/
-.venv/
-.ruff_cache/
-*.egg-info/
-*.spec
+.godot/
+*.import
+
+/android/
+
+.DS_Store
