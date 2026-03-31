@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PlantData" format=3 uid="uid://cmk1ohdaqfftu"]
+
+[ext_resource type="Script" uid="uid://caddkgxbbfl8x" path="res://scripts/plant_data.gd" id="1_nue7i"]
+[ext_resource type="Texture2D" uid="uid://ccc31a4doc3rs" path="res://assets/plants/birch_tree.png" id="2_lyasj"]
+
+[resource]
+script = ExtResource("1_nue7i")
+texture = ExtResource("2_lyasj")
+growth_time = 900.0
+production_time = 1800.0
+metadata/_custom_type_script = "uid://caddkgxbbfl8x"

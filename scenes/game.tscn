@@ -3,6 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://cdj46qof1gj56" path="res://assets/background.png" id="1_uwrxv"]
 [ext_resource type="PackedScene" uid="uid://ckbqf1vd3rob4" path="res://scenes/player.tscn" id="2_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://clikwtp53mcuy" path="res://scenes/soundtrack_player.tscn" id="3_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://bkms3p4nr72k0" path="res://scenes/plant.tscn" id="4_iywne"]
+[ext_resource type="Resource" uid="uid://bjejmw80cv4yi" path="res://assets/data/oak_tree.tres" id="5_iywne"]
 
 [node name="Game" type="Node2D" unique_id=1294033400]
 
@@ -15,3 +17,9 @@ texture = ExtResource("1_uwrxv")
 position_smoothing_enabled = true
 
 [node name="SoundtrackPlayer" parent="." unique_id=985671060 instance=ExtResource("3_lnu2h")]
+
+[node name="Plant" parent="." unique_id=632039623 instance=ExtResource("4_iywne")]
+position = Vector2(-507, -391)
+plant_data = ExtResource("5_iywne")
+
+[connection signal="input_event" from="Plant" to="Plant" method="_on_input_event"]

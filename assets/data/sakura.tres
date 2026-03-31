@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PlantData" format=3 uid="uid://cci75th5uf44g"]
+
+[ext_resource type="Script" uid="uid://caddkgxbbfl8x" path="res://scripts/plant_data.gd" id="1_iuxax"]
+[ext_resource type="Texture2D" uid="uid://c2n7c0srghlb" path="res://assets/plants/sakura.png" id="2_otro2"]
+
+[resource]
+script = ExtResource("1_iuxax")
+texture = ExtResource("2_otro2")
+growth_time = 60.0
+production_time = 120.0
+metadata/_custom_type_script = "uid://caddkgxbbfl8x"

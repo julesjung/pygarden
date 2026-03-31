@@ -1,6 +1,6 @@
 extends Node
 
-@export var tracks: Array[AudioStream] = []
+@export var tracks: Array[AudioStream]
 var _current_index: int = 0
 
 var _player: AudioStreamPlayer

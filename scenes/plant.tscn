@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bkms3p4nr72k0"]
+
+[ext_resource type="Script" uid="uid://c424sfwrwx50t" path="res://scripts/plant.gd" id="1_fi0kw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fi0kw"]
+size = Vector2(192, 256)
+
+[node name="Plant" type="Area2D" unique_id=399592991]
+script = ExtResource("1_fi0kw")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=117386105]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1076744544]
+shape = SubResource("RectangleShape2D_fi0kw")
