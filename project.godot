@@ -11,8 +11,13 @@ config_version=5
 [application]
 
 config/name="PyGarden"
-run/main_scene="uid://chkxcvd0lqhga"
+run/main_scene="uid://cx4ht744wy5xw"
 config/features=PackedStringArray("4.6", "Mobile")
+
+[display]
+
+window/size/viewport_width=1024
+window/size/viewport_height=768
 
 [physics]
 

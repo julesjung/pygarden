@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://bkms3p4nr72k0"]
 
 [ext_resource type="Script" uid="uid://c424sfwrwx50t" path="res://scripts/plant.gd" id="1_fi0kw"]
+[ext_resource type="Texture2D" uid="uid://bdbd8153i0ue5" path="res://assets/progress1.png" id="2_a88lo"]
+[ext_resource type="Texture2D" uid="uid://j8jvthuippbi" path="res://assets/progress2.png" id="3_m5w0e"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fi0kw"]
 size = Vector2(192, 256)
@@ -12,3 +14,13 @@ script = ExtResource("1_fi0kw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1076744544]
 shape = SubResource("RectangleShape2D_fi0kw")
+
+[node name="ProgressBar" type="TextureProgressBar" parent="." unique_id=914321779]
+offset_left = -56.0
+offset_top = 112.0
+offset_right = 40.0
+offset_bottom = 120.0
+max_value = 92.0
+texture_under = ExtResource("2_a88lo")
+texture_progress = ExtResource("3_m5w0e")
+texture_progress_offset = Vector2(2, 2)

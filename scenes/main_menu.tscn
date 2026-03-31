@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://cx4ht744wy5xw"]
+
+[ext_resource type="Script" uid="uid://dwdwhf8rik8gu" path="res://scripts/main_menu.gd" id="1_bqqt6"]
+[ext_resource type="Texture2D" uid="uid://673qsrrpdg0c" path="res://assets/logo.png" id="2_wu84c"]
+[ext_resource type="Texture2D" uid="uid://dxj4tpq2266kd" path="res://assets/main_menu/buttons.png" id="3_8ln24"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rtw2f"]
+atlas = ExtResource("3_8ln24")
+region = Rect2(0, 0, 192, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oa1go"]
+atlas = ExtResource("3_8ln24")
+region = Rect2(192, 0, 192, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bqqt6"]
+atlas = ExtResource("3_8ln24")
+region = Rect2(0, 128, 192, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wu84c"]
+atlas = ExtResource("3_8ln24")
+region = Rect2(192, 128, 192, 64)
+
+[node name="MainMenu" type="Control" unique_id=915495889]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bqqt6")
+
+[node name="Logo" type="Sprite2D" parent="." unique_id=1404496493]
+position = Vector2(519, 210)
+texture = ExtResource("2_wu84c")
+
+[node name="ContinueButton" type="TextureButton" parent="." unique_id=1818256097]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.091000006
+anchor_top = 0.514
+anchor_right = 0.275
+anchor_bottom = 0.61300004
+offset_left = -3.1840057
+offset_top = 0.24798584
+offset_right = 0.3999939
+offset_bottom = 0.09597778
+texture_normal = SubResource("AtlasTexture_rtw2f")
+texture_pressed = SubResource("AtlasTexture_oa1go")
+
+[node name="QuitButton" type="TextureButton" parent="." unique_id=1828696062]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.09
+anchor_top = 0.66800004
+anchor_right = 0.27800003
+anchor_bottom = 0.767
+offset_left = 0.31999207
+offset_top = 0.13598633
+offset_right = -21.568024
+offset_bottom = -0.016021729
+texture_normal = SubResource("AtlasTexture_bqqt6")
+texture_pressed = SubResource("AtlasTexture_wu84c")
+
+[connection signal="pressed" from="ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="pressed" from="QuitButton" to="." method="_on_quit_button_pressed"]

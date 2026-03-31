@@ -1,12 +1,15 @@
 [gd_scene format=3 uid="uid://chkxcvd0lqhga"]
 
+[ext_resource type="Script" uid="uid://2m4fqey71vfw" path="res://scripts/game.gd" id="1_gee14"]
 [ext_resource type="Texture2D" uid="uid://cdj46qof1gj56" path="res://assets/background.png" id="1_uwrxv"]
 [ext_resource type="PackedScene" uid="uid://ckbqf1vd3rob4" path="res://scenes/player.tscn" id="2_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://clikwtp53mcuy" path="res://scenes/soundtrack_player.tscn" id="3_lnu2h"]
 [ext_resource type="PackedScene" uid="uid://bkms3p4nr72k0" path="res://scenes/plant.tscn" id="4_iywne"]
 [ext_resource type="Resource" uid="uid://bjejmw80cv4yi" path="res://assets/data/oak_tree.tres" id="5_iywne"]
+[ext_resource type="PackedScene" uid="uid://b5crdouk1e5do" path="res://scenes/shop.tscn" id="6_p57ef"]
 
 [node name="Game" type="Node2D" unique_id=1294033400]
+script = ExtResource("1_gee14")
 
 [node name="Background" type="Sprite2D" parent="." unique_id=762893731]
 texture = ExtResource("1_uwrxv")
@@ -14,7 +17,13 @@ texture = ExtResource("1_uwrxv")
 [node name="Player" parent="." unique_id=1945465975 instance=ExtResource("2_yqjtg")]
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=286987270]
+limit_left = -1024
+limit_top = -768
+limit_right = 1024
+limit_bottom = 768
+limit_smoothed = true
 position_smoothing_enabled = true
+position_smoothing_speed = 8.0
 
 [node name="SoundtrackPlayer" parent="." unique_id=985671060 instance=ExtResource("3_lnu2h")]
 
@@ -22,4 +31,8 @@ position_smoothing_enabled = true
 position = Vector2(-507, -391)
 plant_data = ExtResource("5_iywne")
 
+[node name="Shop" parent="." unique_id=1832679843 instance=ExtResource("6_p57ef")]
+position = Vector2(531, -431)
+
 [connection signal="input_event" from="Plant" to="Plant" method="_on_input_event"]
+[connection signal="input_event" from="Shop" to="." method="_on_shop_input_event"]

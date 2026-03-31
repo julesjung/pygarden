@@ -13,7 +13,7 @@ func _ready() -> void:
 	_play()
 	
 	_player.finished.connect(_finished)
-	
+
 func _play() -> void:
 	_player.stream = tracks[_current_index]
 	_player.play()

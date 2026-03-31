@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://cwhva3e6xgkm4"]
+
+[ext_resource type="Texture2D" uid="uid://48n2ns8s6fy2" path="res://assets/shop/background.png" id="1_fs6yy"]
+
+[node name="ShopUI" type="CanvasLayer" unique_id=2100466771]
+
+[node name="Control" type="Control" parent="." unique_id=1346189924]
+layout_mode = 3
+anchor_right = 0.88900006
+anchor_bottom = 1.1850001
+offset_right = -0.12805176
+offset_bottom = 0.11993408
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="Sprite2D" parent="Control" unique_id=1817772320]
+position = Vector2(512, 384)
+texture = ExtResource("1_fs6yy")
