@@ -34,6 +34,17 @@ func _process(_delta: float) -> void:
 		else:
 			_progress_bar.value = elapsed * 92 / plant_data.production_time
 
+func save() -> Dictionary:
+	return {
+		"type": plant_data.type,
+		"position": [
+			position.x,
+			position.y
+		],
+		"growth_stage": growth_stage,
+		"start_time": start_time
+	}
+
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
 		if growth_stage == 2:

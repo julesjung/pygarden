@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://bmqtrkfrtxvf3"]
+
+[ext_resource type="Script" uid="uid://bmwbphbdxvbq" path="res://scripts/pause_menu.gd" id="1_n87rw"]
+
+[node name="PauseMenu" type="CanvasLayer" unique_id=1170019984]
+script = ExtResource("1_n87rw")
+
+[node name="Control" type="Control" parent="." unique_id=260779349]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ContinueButton" type="Button" parent="Control" unique_id=1223274833]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.43600002
+anchor_top = 0.21900001
+anchor_right = 0.559
+anchor_bottom = 0.259
+offset_left = -0.46401978
+offset_top = -0.1920166
+offset_right = -35.416016
+offset_bottom = 0.08799744
+text = "Continue game"
+
+[node name="SaveButton" type="Button" parent="Control" unique_id=1999737967]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.44200003
+anchor_top = 0.367
+anchor_right = 0.531
+anchor_bottom = 0.40800002
+offset_left = 0.39196777
+offset_top = 0.14398193
+offset_right = 0.25598145
+offset_bottom = -0.34402466
+text = "Save game"
+
+[connection signal="pressed" from="Control/ContinueButton" to="." method="_on_continue_button_pressed"]
+[connection signal="pressed" from="Control/SaveButton" to="." method="_on_save_button_pressed"]

@@ -5,6 +5,7 @@
 
 [resource]
 script = ExtResource("1_0ocmf")
+type = "oak_tree"
 texture = ExtResource("2_1cfj0")
 growth_time = 5.0
 production_time = 60.0

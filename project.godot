@@ -11,13 +11,20 @@ config_version=5
 [application]
 
 config/name="PyGarden"
+config/version="0.2.0-alpha.0"
 run/main_scene="uid://cx4ht744wy5xw"
+config/use_custom_user_dir=true
 config/features=PackedStringArray("4.6", "Mobile")
+config/icon="uid://cruitytmm8es4"
 
 [display]
 
 window/size/viewport_width=1024
 window/size/viewport_height=768
+
+[gui]
+
+theme/custom_font="uid://q8cpqcdip17e"
 
 [physics]
 

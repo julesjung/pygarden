@@ -5,6 +5,7 @@
 
 [resource]
 script = ExtResource("1_nue7i")
+type = "birch_tree"
 texture = ExtResource("2_lyasj")
 growth_time = 900.0
 production_time = 1800.0

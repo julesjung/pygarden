@@ -5,6 +5,7 @@
 
 [resource]
 script = ExtResource("1_iuxax")
+type = "sakura"
 texture = ExtResource("2_otro2")
 growth_time = 60.0
 production_time = 120.0

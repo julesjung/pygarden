@@ -24,3 +24,5 @@ max_value = 92.0
 texture_under = ExtResource("2_a88lo")
 texture_progress = ExtResource("3_m5w0e")
 texture_progress_offset = Vector2(2, 2)
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]
