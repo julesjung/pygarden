@@ -22,7 +22,7 @@ pyglet==2.1.13
     # via arcade
 pyinstaller==6.19.0
     # via pygarden (pyproject.toml)
-pyinstaller-hooks-contrib==2026.3
+pyinstaller-hooks-contrib==2026.4
     # via pyinstaller
 pymunk==7.2.0
     # via arcade
