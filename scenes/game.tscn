@@ -4,12 +4,12 @@
 [ext_resource type="Texture2D" uid="uid://cdj46qof1gj56" path="res://assets/background.png" id="1_uwrxv"]
 [ext_resource type="Script" uid="uid://caddkgxbbfl8x" path="res://scripts/plant_data.gd" id="2_kvpfn"]
 [ext_resource type="PackedScene" uid="uid://dr8jy2nemm15j" path="res://scenes/save_manager.tscn" id="2_u5sy4"]
-[ext_resource type="PackedScene" uid="uid://ckbqf1vd3rob4" path="res://scenes/player.tscn" id="2_yqjtg"]
 [ext_resource type="PackedScene" uid="uid://clikwtp53mcuy" path="res://scenes/soundtrack_player.tscn" id="3_lnu2h"]
 [ext_resource type="Resource" uid="uid://cci75th5uf44g" path="res://assets/data/sakura.tres" id="4_dinhu"]
 [ext_resource type="Resource" uid="uid://bjejmw80cv4yi" path="res://assets/data/oak_tree.tres" id="5_iywne"]
 [ext_resource type="Resource" uid="uid://cmk1ohdaqfftu" path="res://assets/data/birch_tree.tres" id="5_kvuet"]
 [ext_resource type="Resource" uid="uid://kendf2gdi4cb" path="res://assets/data/pine_tree.tres" id="6_trtic"]
+[ext_resource type="Script" uid="uid://bv4kyfmcid1br" path="res://scripts/camera_2d.gd" id="11_dinhu"]
 [ext_resource type="PackedScene" uid="uid://bmqtrkfrtxvf3" path="res://scenes/pause_menu.tscn" id="11_kvpfn"]
 
 [node name="Game" type="Node2D" unique_id=1294033400]
@@ -26,19 +26,12 @@ plants_data = Dictionary[String, ExtResource("2_kvpfn")]({
 [node name="Background" type="Sprite2D" parent="." unique_id=762893731]
 texture = ExtResource("1_uwrxv")
 
-[node name="Player" parent="." unique_id=1945465975 instance=ExtResource("2_yqjtg")]
-
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=286987270]
-limit_left = -1024
-limit_top = -768
-limit_right = 1024
-limit_bottom = 768
-limit_smoothed = true
-position_smoothing_enabled = true
-position_smoothing_speed = 8.0
-
 [node name="SoundtrackPlayer" parent="." unique_id=985671060 instance=ExtResource("3_lnu2h")]
 
 [node name="PauseMenu" parent="." unique_id=260779349 instance=ExtResource("11_kvpfn")]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=286987270]
+limit_enabled = false
+script = ExtResource("11_dinhu")
 
 [connection signal="save_pressed" from="PauseMenu" to="." method="_on_pause_menu_save_pressed"]
