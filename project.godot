@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="PyGarden"
-config/version="0.2.0-alpha.0"
+config/version="0.2.0"
 run/main_scene="uid://cx4ht744wy5xw"
 config/use_custom_user_dir=true
 config/features=PackedStringArray("4.6", "Mobile")

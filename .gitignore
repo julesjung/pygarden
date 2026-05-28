@@ -1,6 +1,7 @@
-.godot/
+.godot
 *.import
 
-/android/
+/android
+/build
 
 .DS_Store
