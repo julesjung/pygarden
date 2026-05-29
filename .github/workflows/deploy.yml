@@ -1,0 +1,87 @@
+name: Export Godot Game to Web & Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: "4.6.3"
+  EXPORT_PRESET: "Web"
+  EXPORT_DIR: "build/web"
+  PROJECT_PATH: "."
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/cache@v5
+        id: cache-godot
+        with:
+          path: |
+            ~/.local/share/godot
+            /usr/local/bin/godot
+          key: godot-${{ env.GODOT_VERSION }}-linux
+
+      - if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          GODOT_FILENAME="Godot_v${GODOT_VERSION}-stable_linux.x86_64"
+          wget -q "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-stable/${GODOT_FILENAME}.zip"
+          unzip -q "${GODOT_FILENAME}.zip"
+          mv "${GODOT_FILENAME}" /usr/local/bin/godot
+          chmod +x /usr/local/bin/godot
+
+      - if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          TEMPLATES_FILENAME="Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          wget -q "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-stable/${TEMPLATES_FILENAME}"
+          mkdir -p ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          unzip -q "${TEMPLATES_FILENAME}" -d /tmp/templates
+          mv /tmp/templates/templates/* ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable/
+
+      - run: |
+          mkdir -p ${{ env.EXPORT_DIR }}
+          godot \
+            --headless \
+            --path "${{ env.PROJECT_PATH }}" \
+            --export-release "${{ env.EXPORT_PRESET }}" \
+            "${{ env.EXPORT_DIR }}/index.html" \
+            2>&1 | tee export.log
+
+      - run: |
+          wget -q -O "${{ env.EXPORT_DIR }}/coi-serviceworker.js" \
+            "https://raw.githubusercontent.com/gzuidhof/coi-serviceworker/master/coi-serviceworker.js"
+
+          sed -i 's|</head>|<script src="coi-serviceworker.js"></script>\n</head>|' \
+            "${{ env.EXPORT_DIR }}/index.html"
+
+      - name: Upload web build artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ env.EXPORT_DIR }}
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: export
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
