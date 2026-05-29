@@ -1,0 +1,37 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="PyGarden"
+config/version="0.2.0"
+run/main_scene="uid://cx4ht744wy5xw"
+config/use_custom_user_dir=true
+config/features=PackedStringArray("4.6", "Mobile")
+config/icon="uid://cruitytmm8es4"
+
+[display]
+
+window/size/viewport_width=1024
+window/size/viewport_height=768
+
+[gui]
+
+theme/custom_font="uid://q8cpqcdip17e"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+rendering_device/driver.windows="d3d12"
+renderer/rendering_method="mobile"

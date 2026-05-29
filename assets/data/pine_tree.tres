@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="PlantData" format=3 uid="uid://kendf2gdi4cb"]
+
+[ext_resource type="Script" uid="uid://caddkgxbbfl8x" path="res://scripts/plant_data.gd" id="1_ciojs"]
+[ext_resource type="Texture2D" uid="uid://byvumkraf8axj" path="res://assets/plants/pine_tree.png" id="2_t6734"]
+
+[resource]
+script = ExtResource("1_ciojs")
+type = "pine_tree"
+texture = ExtResource("2_t6734")
+growth_time = 3600.0
+production_time = 3600.0
+metadata/_custom_type_script = "uid://caddkgxbbfl8x"
