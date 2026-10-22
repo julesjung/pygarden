@@ -1,5 +1,7 @@
 #![windows_subsystem = "windows"]
 
+mod data;
+mod plant;
 mod resources;
 
 use macroquad::audio::{PlaySoundParams, play_sound};
@@ -7,10 +9,9 @@ use macroquad::prelude::*;
 use macroquad::rand::rand;
 use macroquad::ui::{hash, root_ui, widgets};
 
+use crate::data::Data;
+use crate::plant::Plant;
 use crate::resources::{Assets, ICON};
-
-const PLANT_WIDTH: f32 = 192.0;
-const PLANT_HEIGHT: f32 = 256.0;
 
 const PLANT_POSITIONS: [(f32, f32); 8] = [
     (128.0, 64.0),
@@ -76,41 +77,33 @@ async fn main() {
         },
     );
 
-    let mut plants: [[Option<Plant>; 8]; 3] = [
-        [None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, None, None],
-        [None, None, None, None, None, None, None, None],
-    ];
+    let mut data = Data::load();
 
     loop {
         draw_background(&assets, selected_biome);
 
-        for (position, plant) in PLANT_POSITIONS.iter().zip(plants[selected_biome].iter()) {
+        for (position, plant) in PLANT_POSITIONS
+            .iter()
+            .zip(data.plants[selected_biome].iter())
+        {
             match plant {
                 Some(plant) => plant.draw(&assets, position.0, position.1),
                 None => draw_placement(&assets, selected_biome, position.0, position.1),
             };
         }
 
-        widgets::Window::new(hash!(), vec2(0.0, 0.0), vec2(192.0, 128.0))
-            .label("Camera")
-            .titlebar(true)
-            .ui(&mut *root_ui(), |ui| {
-                ui.combo_box(
-                    hash!(),
-                    "Biome",
-                    &["Plaine", "Mer", "Savanne"],
-                    &mut selected_biome,
-                );
-            });
-
         widgets::Window::new(hash!(), vec2(768.0, 0.0), vec2(256.0, 512.0))
-            .label("Gestion des données")
+            .label("Baboab")
             .titlebar(true)
-            .close_button(true)
             .ui(&mut *root_ui(), |ui| {
-                ui.group(hash!(), vec2(256.0, 256.0), |ui| {
-                    ui.label(None, "Nouvel arbre");
+                if ui.button(None, "Charger") {
+                    data = Data::load();
+                }
+                if ui.button(None, "Enregistrer") {
+                    data.save().unwrap();
+                }
+
+                ui.tree_node(hash!(), "Planter", |ui| {
                     match selected_biome {
                         0 => {
                             ui.combo_box(
@@ -147,90 +140,30 @@ async fn main() {
                                 _ => 0,
                             })
                         };
-                        plants[selected_biome][0] = Some(Plant::new(kind))
+                        data.plants[selected_biome][0] = Some(Plant::new(kind))
                     }
-                });
 
-                ui.group(hash!(), vec2(256.0, 256.0), |ui| {
                     if ui.button(None, "Faire pousser") {
-                        match &mut plants[selected_biome][0] {
+                        match &mut data.plants[selected_biome][0] {
                             Some(plant) => plant.grow(),
                             None => (),
                         }
                     }
                 });
+
+                ui.tree_node(hash!(), "Caméra", |ui| {
+                    ui.combo_box(
+                        hash!(),
+                        "Biome",
+                        &["Plaine", "Mer", "Savanne"],
+                        &mut selected_biome,
+                    );
+                });
+
+                ui.tree_node(hash!(), "Musique", |ui| {});
             });
 
         next_frame().await
-    }
-}
-
-#[repr(usize)]
-#[derive(Debug, Clone, Copy)]
-enum PlantKind {
-    Oak = 0,
-    Sakura = 1,
-    Birch = 2,
-    Pine = 3,
-    Clovers = 4,
-    Kelp = 5,
-    Nenuphar = 6,
-    Corals = 7,
-    Acacia = 8,
-    Cactus = 9,
-    Palm = 10,
-    Baobab = 11,
-}
-
-#[repr(usize)]
-#[derive(Debug, Clone, Copy)]
-enum Growth {
-    Sprout = 0,
-    NoLeaves = 1,
-    FullyGrown = 2,
-}
-
-struct Plant {
-    kind: PlantKind,
-    growth: Growth,
-}
-
-impl Plant {
-    fn new(kind: PlantKind) -> Plant {
-        Plant {
-            kind,
-            growth: Growth::Sprout,
-        }
-    }
-}
-
-impl Plant {
-    fn grow(&mut self) {
-        self.growth = match self.growth {
-            Growth::Sprout => Growth::NoLeaves,
-            Growth::NoLeaves => Growth::FullyGrown,
-            Growth::FullyGrown => Growth::FullyGrown,
-        };
-    }
-
-    fn draw(&self, assets: &Assets, x: f32, y: f32) {
-        let texture = assets.plant_textures.get(self.kind as usize).unwrap();
-
-        draw_texture_ex(
-            &texture,
-            x,
-            y,
-            WHITE,
-            DrawTextureParams {
-                source: Some(Rect::new(
-                    PLANT_WIDTH * (self.growth as usize) as f32,
-                    0.0,
-                    PLANT_WIDTH,
-                    PLANT_HEIGHT,
-                )),
-                ..Default::default()
-            },
-        );
     }
 }
 
