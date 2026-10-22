@@ -1,0 +1,24 @@
+[package]
+name = "pygarden"
+version = "0.1.0"
+edition = "2024"
+
+[package.metadata.bundle]
+name = "PyGarden"
+identifier = "com.julesjung.pygarden"
+version = "0.2.0"
+
+[dependencies]
+macroquad = { version = "0.4.16", features = ["audio"] }
+
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+debug = false
+
+[profile.release]
+opt-level = 3
+strip = true
+lto = true
+codegen-units = 1
