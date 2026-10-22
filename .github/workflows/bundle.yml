@@ -1,0 +1,63 @@
+name: Bundle
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  bundle-macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+      - run: cargo install cargo-bundle
+      - run: cargo bundle --release
+      - uses: actions/upload-artifact@v7
+        with:
+          name: macos-dmg
+          path: target/release/bundle/dmg/PyGarden.dmg
+
+  bundle-windows:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+      - run: cargo install cargo-bundle
+      - run: cargo bundle --release
+      - uses: actions/upload-artifact@v7
+        with:
+          name: windows-exe
+          path: target/release/pygarden.exe
+      - uses: actions/upload-artifact@v7
+        with:
+          name: windows-msi
+          path: target/release/bundle/msi/PyGarden.msi
