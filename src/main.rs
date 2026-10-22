@@ -1,3 +1,5 @@
+#![windows_subsystem = "windows"]
+
 mod resources;
 
 use macroquad::audio::{PlaySoundParams, play_sound};

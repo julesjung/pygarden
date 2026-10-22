@@ -1,8 +1,6 @@
 name: Bundle
 
 on:
-  push:
-    branches: [chore/macroquad-rust]
   workflow_dispatch:
 
 permissions:
@@ -38,9 +36,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: macos
-          path: |
-              target/release/bundle/osx/PyGarden.app
-              target/release/bundle/dmg/PyGarden.dmg
+          path: target/release/bundle/dmg/PyGarden.dmg
 
   bundle-windows:
     runs-on: windows-latest
