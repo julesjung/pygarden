@@ -28,6 +28,7 @@ jobs:
           path: |
             ~/.cargo/registry
             ~/.cargo/git
+            ~/.cargo/bin
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
@@ -36,12 +37,10 @@ jobs:
       - run: cargo bundle --release
       - uses: actions/upload-artifact@v7
         with:
-          name: macos-dmg
-          path: target/release/bundle/osx/PyGarden.app
-      - uses: actions/upload-artifact@v7
-        with:
-          name: macos-dmg
-          path: target/release/bundle/dmg/PyGarden.dmg
+          name: macos
+          path: |
+              target/release/bundle/osx/PyGarden.app
+              target/release/bundle/dmg/PyGarden.dmg
 
   bundle-windows:
     runs-on: windows-latest
@@ -57,13 +56,8 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-      - run: cargo install cargo-bundle
-      - run: cargo bundle --release
+      - run: cargo build --release
       - uses: actions/upload-artifact@v7
         with:
-          name: windows-exe
+          name: windows
           path: target/release/pygarden.exe
-      - uses: actions/upload-artifact@v7
-        with:
-          name: windows-msi
-          path: target/release/bundle/msi/PyGarden.msi
