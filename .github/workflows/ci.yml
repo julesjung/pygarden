@@ -13,14 +13,7 @@ env:
 
 jobs:
   check:
-    name: ${{ matrix.crate }}
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        crate:
-          - libellule
-          - libellule-uniffi
 
     steps:
       - uses: actions/checkout@v6
@@ -33,7 +26,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-      - run: cargo fmt -p ${{ matrix.crate }} --check
-      - run: cargo clippy -p ${{ matrix.crate }} --all-targets --all-features --keep-going -- -D warnings
-      - run: cargo build -p ${{ matrix.crate }} --all-targets --all-features
-      - run: cargo test -p ${{ matrix.crate }} --all-targets --all-features
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets --all-features --keep-going -- -D warnings
+      - run: cargo build --all-targets --all-features
+      - run: cargo test --all-targets --all-features

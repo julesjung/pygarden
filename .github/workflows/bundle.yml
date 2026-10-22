@@ -22,7 +22,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/cache@v6
         with:
           path: |
@@ -37,13 +37,17 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: macos-dmg
+          path: target/release/bundle/osx/PyGarden.app
+      - uses: actions/upload-artifact@v7
+        with:
+          name: macos-dmg
           path: target/release/bundle/dmg/PyGarden.dmg
 
   bundle-windows:
-    runs-on: macos-latest
+    runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/cache@v6
         with:
           path: |
