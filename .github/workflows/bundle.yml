@@ -1,6 +1,8 @@
 name: Bundle
 
 on:
+  push:
+    branches: [chore/macroquad-rust]
   workflow_dispatch:
 
 permissions:
