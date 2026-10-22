@@ -1,14 +1,18 @@
 #![windows_subsystem = "windows"]
 
+mod audio;
 mod data;
 mod plant;
 mod resources;
 
-use macroquad::audio::{PlaySoundParams, play_sound};
+use std::io::Cursor;
+
+use kira::sound::streaming::StreamingSoundData;
+use kira::{AudioManager, AudioManagerSettings, DefaultBackend};
 use macroquad::prelude::*;
-use macroquad::rand::rand;
 use macroquad::ui::{hash, root_ui, widgets};
 
+use crate::audio::MusicPlayer;
 use crate::data::Data;
 use crate::plant::Plant;
 use crate::resources::{Assets, ICON};
@@ -64,20 +68,15 @@ async fn main() {
     clear_background(BLACK);
     next_frame().await;
 
+    let mut editor = false;
     let mut selected_biome = 0usize;
     let mut selected_plant_types: (usize, usize, usize) = (0, 0, 0);
 
     let assets = Assets::load().await;
 
-    play_sound(
-        &assets.music[(rand() as usize) % 4],
-        PlaySoundParams {
-            looped: true,
-            volume: 1.0,
-        },
-    );
-
     let mut data = Data::load();
+
+    let mut music_player = MusicPlayer::new();
 
     loop {
         draw_background(&assets, selected_biome);
@@ -92,76 +91,84 @@ async fn main() {
             };
         }
 
-        widgets::Window::new(hash!(), vec2(768.0, 0.0), vec2(256.0, 512.0))
-            .label("Baboab")
-            .titlebar(true)
-            .ui(&mut *root_ui(), |ui| {
-                if ui.button(None, "Charger") {
-                    data = Data::load();
-                }
-                if ui.button(None, "Enregistrer") {
-                    data.save().unwrap();
-                }
+        if editor {
+            widgets::Window::new(hash!(), vec2(768.0, 0.0), vec2(256.0, 512.0))
+                .label("BABOAB")
+                .titlebar(true)
+                .ui(&mut *root_ui(), |ui| {
+                    if ui.button(None, "Charger") {
+                        data = Data::load();
+                    }
+                    if ui.button(None, "Enregistrer") {
+                        data.save().unwrap();
+                    }
 
-                ui.tree_node(hash!(), "Planter", |ui| {
-                    match selected_biome {
-                        0 => {
-                            ui.combo_box(
-                                hash!(),
-                                "Type",
-                                &["Chêne", "Cerisier du Japon", "Bouleau", "Sapin"],
-                                &mut selected_plant_types.0,
-                            );
-                        }
-                        1 => {
-                            ui.combo_box(
-                                hash!(),
-                                "Type",
-                                &["Trèfles", "Algues", "Nénuphar", "Coraux"],
-                                &mut selected_plant_types.1,
-                            );
-                        }
-                        2 => {
-                            ui.combo_box(
-                                hash!(),
-                                "Type",
-                                &["Acacia", "Cactus", "Palmier", "Baobab"],
-                                &mut selected_plant_types.2,
-                            );
-                        }
-                        _ => (),
-                    };
-                    if ui.button(None, "Planter") {
-                        let kind = unsafe {
-                            std::mem::transmute(match selected_biome {
-                                0 => selected_plant_types.0,
-                                1 => 4 + selected_plant_types.1,
-                                2 => 8 + selected_plant_types.2,
-                                _ => 0,
-                            })
+                    ui.tree_node(hash!(), "Planter", |ui| {
+                        match selected_biome {
+                            0 => {
+                                ui.combo_box(
+                                    hash!(),
+                                    "Type",
+                                    &["Chêne", "Cerisier du Japon", "Bouleau", "Sapin"],
+                                    &mut selected_plant_types.0,
+                                );
+                            }
+                            1 => {
+                                ui.combo_box(
+                                    hash!(),
+                                    "Type",
+                                    &["Trèfles", "Algues", "Nénuphar", "Coraux"],
+                                    &mut selected_plant_types.1,
+                                );
+                            }
+                            2 => {
+                                ui.combo_box(
+                                    hash!(),
+                                    "Type",
+                                    &["Acacia", "Cactus", "Palmier", "Baobab"],
+                                    &mut selected_plant_types.2,
+                                );
+                            }
+                            _ => (),
                         };
-                        data.plants[selected_biome][0] = Some(Plant::new(kind))
-                    }
-
-                    if ui.button(None, "Faire pousser") {
-                        match &mut data.plants[selected_biome][0] {
-                            Some(plant) => plant.grow(),
-                            None => (),
+                        if ui.button(None, "Planter") {
+                            let kind = unsafe {
+                                std::mem::transmute(match selected_biome {
+                                    0 => selected_plant_types.0,
+                                    1 => 4 + selected_plant_types.1,
+                                    2 => 8 + selected_plant_types.2,
+                                    _ => 0,
+                                })
+                            };
+                            data.plants[selected_biome][0] = Some(Plant::new(kind))
                         }
-                    }
-                });
 
-                ui.tree_node(hash!(), "Caméra", |ui| {
-                    ui.combo_box(
-                        hash!(),
-                        "Biome",
-                        &["Plaine", "Mer", "Savanne"],
-                        &mut selected_biome,
-                    );
-                });
+                        if ui.button(None, "Faire pousser") {
+                            match &mut data.plants[selected_biome][0] {
+                                Some(plant) => plant.grow(),
+                                None => (),
+                            }
+                        }
+                    });
 
-                ui.tree_node(hash!(), "Musique", |ui| {});
-            });
+                    ui.tree_node(hash!(), "Caméra", |ui| {
+                        ui.combo_box(
+                            hash!(),
+                            "Biome",
+                            &["Plaine", "Mer", "Savanne"],
+                            &mut selected_biome,
+                        );
+                    });
+
+                    ui.tree_node(hash!(), "Musique", |ui| {});
+                });
+        }
+
+        if is_key_pressed(KeyCode::F1) {
+            editor = !editor;
+        }
+
+        music_player.update();
 
         next_frame().await
     }

@@ -1,4 +1,3 @@
-use macroquad::audio::{Sound, load_sound_from_bytes};
 use macroquad::miniquad::conf::Icon;
 use macroquad::prelude::*;
 
@@ -12,7 +11,6 @@ pub struct Assets {
     pub background: Texture2D,
     pub placements: [Texture2D; 3],
     pub plant_textures: [Texture2D; 12],
-    pub music: [Sound; 4],
 }
 
 impl Assets {
@@ -20,11 +18,11 @@ impl Assets {
         let logo = Texture2D::from_file_with_format(include_bytes!("../assets/logo.png"), None);
 
         let mut progress = 0;
-        let total = 21;
+        let total = 17;
 
         macro_rules! load {
-            (texture2d $s:literal) => {{
-                let texture = Texture2D::from_file_with_format(include_bytes!($s), None);
+            (texture2d $($arg:tt)*) => {{
+                let texture = Texture2D::from_file_with_format(include_bytes!($($arg)*), None);
                 texture.set_filter(FilterMode::Nearest);
                 progress += 1;
 
@@ -36,20 +34,8 @@ impl Assets {
                 texture
             }};
 
-            (sound $s:literal) => {{
-                let sound = load_sound_from_bytes(include_bytes!($s)).await.unwrap();
-                progress += 1;
-
-                clear_background(BLACK);
-                draw_texture(&logo, 256.0, 280.0, WHITE);
-                draw_bar(256.0, 504.0, 512.0, 32.0, progress as f32 / total as f32);
-                next_frame().await;
-
-                sound
-            }};
-
-            (font $s:literal) => {{
-                let font = load_ttf_font_from_bytes(include_bytes!($s)).unwrap();
+            (font $($arg:tt)*) => {{
+                let font = load_ttf_font_from_bytes(include_bytes!($($arg)*)).unwrap();
                 progress += 1;
 
                 clear_background(BLACK);
@@ -90,17 +76,9 @@ impl Assets {
 
         let font = load!(font "../assets/fonts/dohyeon-regular.ttf");
 
-        let music = [
-            load!(sound "../assets/music/soundtrack_1.ogg"),
-            load!(sound "../assets/music/soundtrack_2.ogg"),
-            load!(sound "../assets/music/soundtrack_3.ogg"),
-            load!(sound "../assets/music/soundtrack_4.ogg"),
-        ];
-
         Assets {
             placements,
             plant_textures,
-            music,
             background,
         }
     }
