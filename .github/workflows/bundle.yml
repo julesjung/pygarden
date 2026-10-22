@@ -31,7 +31,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-      - run: cargo install cargo-bundle
+      - run: command -v cargo-bundle || cargo install cargo-bundle
       - run: cargo bundle --release
       - uses: actions/upload-artifact@v7
         with:
