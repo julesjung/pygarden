@@ -31,6 +31,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
+      - uses: FedericoCarboni/setup-ffmpeg@v3
       - run: command -v cargo-bundle || cargo install cargo-bundle
       - run: cargo bundle --release
       - uses: actions/upload-artifact@v7
@@ -52,6 +53,9 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
+      - uses: FedericoCarboni/setup-ffmpeg@v3
+        with:
+          github-token: ${{ github.token }}
       - run: cargo build --release
       - uses: actions/upload-artifact@v7
         with:
