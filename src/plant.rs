@@ -53,14 +53,19 @@ impl Plant {
         };
     }
 
-    pub fn draw(&self, assets: &Assets, x: f32, y: f32) {
+    pub fn draw(&self, assets: &Assets, x: f32, y: f32, hovered: bool) {
         let texture = assets.plant_textures.get(self.kind as usize).unwrap();
+
+        let color = match hovered {
+            false => WHITE,
+            true => Color::from_rgba(255, 200, 200, 255),
+        };
 
         draw_texture_ex(
             &texture,
             x,
             y,
-            WHITE,
+            color,
             DrawTextureParams {
                 source: Some(Rect::new(
                     PLANT_WIDTH * (self.growth as usize) as f32,

@@ -5,10 +5,6 @@ mod data;
 mod plant;
 mod resources;
 
-use std::io::Cursor;
-
-use kira::sound::streaming::StreamingSoundData;
-use kira::{AudioManager, AudioManagerSettings, DefaultBackend};
 use macroquad::prelude::*;
 use macroquad::ui::{hash, root_ui, widgets};
 
@@ -17,15 +13,15 @@ use crate::data::Data;
 use crate::plant::Plant;
 use crate::resources::{Assets, ICON};
 
-const PLANT_POSITIONS: [(f32, f32); 8] = [
-    (128.0, 64.0),
-    (320.0, 64.0),
-    (512.0, 64.0),
-    (704.0, 64.0),
-    (128.0, 320.0),
-    (320.0, 320.0),
-    (512.0, 320.0),
-    (704.0, 320.0),
+const PLANT_POSITIONS: [Vec2; 8] = [
+    vec2(128.0, 64.0),
+    vec2(320.0, 64.0),
+    vec2(512.0, 64.0),
+    vec2(704.0, 64.0),
+    vec2(128.0, 320.0),
+    vec2(320.0, 320.0),
+    vec2(512.0, 320.0),
+    vec2(704.0, 320.0),
 ];
 
 fn window_conf() -> Conf {
@@ -69,8 +65,12 @@ async fn main() {
     next_frame().await;
 
     let mut editor = false;
+    let mut hovered_plant: Option<usize> = None;
+    let mut selected_plant: Option<usize> = None;
     let mut selected_biome = 0usize;
     let mut selected_plant_types: (usize, usize, usize) = (0, 0, 0);
+
+    let plant_window_id = hash!();
 
     let assets = Assets::load().await;
 
@@ -81,13 +81,16 @@ async fn main() {
     loop {
         draw_background(&assets, selected_biome);
 
-        for (position, plant) in PLANT_POSITIONS
+        for (index, (position, plant)) in PLANT_POSITIONS
             .iter()
             .zip(data.plants[selected_biome].iter())
+            .enumerate()
         {
+            let hovered = Some(index) == hovered_plant;
+
             match plant {
-                Some(plant) => plant.draw(&assets, position.0, position.1),
-                None => draw_placement(&assets, selected_biome, position.0, position.1),
+                Some(plant) => plant.draw(&assets, position.x, position.y, hovered),
+                None => draw_placement(&assets, selected_biome, position.x, position.y, hovered),
             };
         }
 
@@ -103,54 +106,6 @@ async fn main() {
                         data.save().unwrap();
                     }
 
-                    ui.tree_node(hash!(), "Planter", |ui| {
-                        match selected_biome {
-                            0 => {
-                                ui.combo_box(
-                                    hash!(),
-                                    "Type",
-                                    &["Chêne", "Cerisier du Japon", "Bouleau", "Sapin"],
-                                    &mut selected_plant_types.0,
-                                );
-                            }
-                            1 => {
-                                ui.combo_box(
-                                    hash!(),
-                                    "Type",
-                                    &["Trèfles", "Algues", "Nénuphar", "Coraux"],
-                                    &mut selected_plant_types.1,
-                                );
-                            }
-                            2 => {
-                                ui.combo_box(
-                                    hash!(),
-                                    "Type",
-                                    &["Acacia", "Cactus", "Palmier", "Baobab"],
-                                    &mut selected_plant_types.2,
-                                );
-                            }
-                            _ => (),
-                        };
-                        if ui.button(None, "Planter") {
-                            let kind = unsafe {
-                                std::mem::transmute(match selected_biome {
-                                    0 => selected_plant_types.0,
-                                    1 => 4 + selected_plant_types.1,
-                                    2 => 8 + selected_plant_types.2,
-                                    _ => 0,
-                                })
-                            };
-                            data.plants[selected_biome][0] = Some(Plant::new(kind))
-                        }
-
-                        if ui.button(None, "Faire pousser") {
-                            match &mut data.plants[selected_biome][0] {
-                                Some(plant) => plant.grow(),
-                                None => (),
-                            }
-                        }
-                    });
-
                     ui.tree_node(hash!(), "Caméra", |ui| {
                         ui.combo_box(
                             hash!(),
@@ -159,23 +114,113 @@ async fn main() {
                             &mut selected_biome,
                         );
                     });
-
-                    ui.tree_node(hash!(), "Musique", |ui| {});
                 });
         }
 
-        if is_key_pressed(KeyCode::F1) {
-            editor = !editor;
+        if let Some(index) = selected_plant {
+            let window_position = PLANT_POSITIONS[index] + vec2(0.0, 256.0);
+
+            root_ui().window(plant_window_id, window_position, vec2(256.0, 128.0), |ui| {
+                match selected_biome {
+                    0 => {
+                        ui.combo_box(
+                            hash!(),
+                            "Type",
+                            &["Chêne", "Cerisier du Japon", "Bouleau", "Sapin"],
+                            &mut selected_plant_types.0,
+                        );
+                    }
+                    1 => {
+                        ui.combo_box(
+                            hash!(),
+                            "Type",
+                            &["Trèfles", "Algues", "Nénuphar", "Coraux"],
+                            &mut selected_plant_types.1,
+                        );
+                    }
+                    2 => {
+                        ui.combo_box(
+                            hash!(),
+                            "Type",
+                            &["Acacia", "Cactus", "Palmier", "Baobab"],
+                            &mut selected_plant_types.2,
+                        );
+                    }
+                    _ => (),
+                };
+
+                if ui.button(None, "Planter") {
+                    let kind = unsafe {
+                        std::mem::transmute(match selected_biome {
+                            0 => selected_plant_types.0,
+                            1 => 4 + selected_plant_types.1,
+                            2 => 8 + selected_plant_types.2,
+                            _ => 0,
+                        })
+                    };
+
+                    data.plants[selected_biome][index] = Some(Plant::new(kind))
+                }
+
+                if let Some(plant) = &mut data.plants[selected_biome][index] {
+                    if ui.button(None, "Faire pousser") {
+                        plant.grow();
+                    }
+                }
+            });
         }
 
         music_player.update();
+
+        hovered_plant = None;
+        let position = mouse_position();
+
+        if !root_ui().is_mouse_captured() && !root_ui().is_mouse_over(vec2(position.0, position.1))
+        {
+            for (index, plant_position) in PLANT_POSITIONS.iter().enumerate() {
+                if is_in_bounding_box(plant_position, position.0, position.1) {
+                    hovered_plant = Some(index);
+                    break;
+                }
+            }
+
+            if is_key_pressed(KeyCode::F1) {
+                editor = !editor;
+            }
+
+            if is_mouse_button_pressed(MouseButton::Left) {
+                if selected_plant != hovered_plant {
+                    selected_plant = hovered_plant;
+
+                    if let Some(selected) = selected_plant {
+                        let window_position = PLANT_POSITIONS[selected] + vec2(0.0, 256.0);
+
+                        root_ui().move_window(plant_window_id, window_position);
+                    }
+                }
+            }
+        }
 
         next_frame().await
     }
 }
 
-fn draw_placement(assets: &Assets, biome: usize, x: f32, y: f32) {
+fn is_in_bounding_box(plant_position: &Vec2, x: f32, y: f32) -> bool {
+    let plant_right = plant_position.x;
+    let plant_top = plant_position.y;
+    let plant_left = plant_right + 192.0;
+    let plant_bottom = plant_top + 256.0;
+
+    plant_right < x && x < plant_left && plant_top < y && y < plant_bottom
+}
+
+fn draw_placement(assets: &Assets, biome: usize, x: f32, y: f32, hovered: bool) {
     let texture = &assets.placements[biome];
 
-    draw_texture(&texture, x, y, WHITE);
+    let color = match hovered {
+        false => WHITE,
+        true => Color::from_rgba(255, 200, 200, 255),
+    };
+
+    draw_texture(&texture, x, y, color);
 }
